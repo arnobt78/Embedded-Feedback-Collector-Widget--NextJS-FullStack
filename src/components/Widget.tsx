@@ -51,37 +51,43 @@ export default function Widget({ apiBase = "/api/feedback" }: WidgetProps) {
     if (!isOpen) return;
 
     const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node;
+      // Use composedPath() to get the full event path through Shadow DOM
+      const path = event.composedPath();
 
-      // Check if click is outside the popover container
-      if (popoverRef.current && !popoverRef.current.contains(target)) {
+      // Check if any element in the path is our popover
+      const clickedInsidePopover = path.some(
+        (element) => element === popoverRef.current
+      );
+
+      // Only close if click was outside the popover
+      if (!clickedInsidePopover) {
         setIsOpen(false);
       }
     };
 
     // Add a small delay to prevent immediate closure when opening
     const timeoutId = setTimeout(() => {
-      // Listen on document for regular pages and shadow root if available
+      // Listen on document for regular pages
       document.addEventListener("mousedown", handleClickOutside);
 
       // Also listen on the shadow root if we're inside one
-      const shadowRoot = popoverRef.current?.getRootNode();
-      if (shadowRoot && shadowRoot !== document) {
-        shadowRoot.addEventListener(
+      const rootNode = popoverRef.current?.getRootNode();
+      if (rootNode && rootNode !== document) {
+        rootNode.addEventListener(
           "mousedown",
           handleClickOutside as EventListener
         );
       }
-    }, 0);
+    }, 100); // Increased delay to 100ms for better stability
 
     return () => {
       clearTimeout(timeoutId);
       document.removeEventListener("mousedown", handleClickOutside);
 
       // Cleanup shadow root listener
-      const shadowRoot = popoverRef.current?.getRootNode();
-      if (shadowRoot && shadowRoot !== document) {
-        shadowRoot.removeEventListener(
+      const rootNode = popoverRef.current?.getRootNode();
+      if (rootNode && rootNode !== document) {
+        rootNode.removeEventListener(
           "mousedown",
           handleClickOutside as EventListener
         );
