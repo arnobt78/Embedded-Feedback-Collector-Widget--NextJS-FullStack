@@ -167,9 +167,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       {/* Apply font CSS variables to body so they're available throughout the app */}
       {/* These variables can be used in Tailwind config or CSS */}
+      {/* suppressHydrationWarning is needed because browser extensions may inject attributes into <html> */}
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         {children} {/* Render page content */}
       </body>
