@@ -118,7 +118,6 @@ export const metadata: Metadata = {
     shortcut: "/favicon.ico",
     apple: "/favicon.ico",
   },
-  manifest: "/favicon.ico",
   openGraph: {
     type: "website",
     locale: "en_US",
