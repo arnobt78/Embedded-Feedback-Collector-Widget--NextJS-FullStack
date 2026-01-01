@@ -1,8 +1,8 @@
 /**
  * Dashboard Overview Page
- * 
+ *
  * Main dashboard overview page showing summary statistics and quick actions.
- * 
+ *
  * This page displays:
  * - Total feedback count
  * - Active projects count
@@ -30,9 +30,9 @@ import { Button } from "@/components/ui/button";
 
 /**
  * Dashboard Overview Page
- * 
+ *
  * Displays real-time statistics and quick actions.
- * 
+ *
  * @returns {JSX.Element} Dashboard overview page
  */
 export default function DashboardPage() {
@@ -40,8 +40,7 @@ export default function DashboardPage() {
   const { data: projects, isLoading: projectsLoading } = useProjects();
 
   const isLoading = analyticsLoading || projectsLoading;
-  const activeProjectsCount =
-    projects?.filter((p) => p.isActive).length ?? 0;
+  const activeProjectsCount = projects?.filter((p) => p.isActive).length ?? 0;
 
   return (
     <DashboardLayout
@@ -107,7 +106,7 @@ export default function DashboardPage() {
                   View Feedback
                 </Button>
               </Link>
-              <Link href="/dashboard/analytics">
+              <Link href="/dashboard/business-insights">
                 <Button variant="outline" className="w-full justify-start">
                   <TrendingUp className="mr-2 h-4 w-4" />
                   View Analytics
@@ -120,4 +119,3 @@ export default function DashboardPage() {
     </DashboardLayout>
   );
 }
-

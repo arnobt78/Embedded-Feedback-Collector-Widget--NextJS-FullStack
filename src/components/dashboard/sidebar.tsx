@@ -66,7 +66,7 @@ const navItems: NavItem[] = [
   },
   {
     title: "Analytics",
-    href: "/dashboard/analytics",
+    href: "/dashboard/business-insights",
     icon: BarChart3,
   },
 ];

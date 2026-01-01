@@ -1,7 +1,7 @@
 /**
- * Analytics Page
+ * Business Insights Page
  *
- * Page for viewing analytics and statistics.
+ * Page for viewing business insights and statistics.
  * Displays charts and graphs showing feedback trends.
  *
  * Features:
@@ -9,6 +9,8 @@
  * - Feedback by project chart
  * - Recent feedback trends
  * - Key statistics
+ *
+ * Note: Renamed from 'analytics' to avoid browser extension blocking
  */
 
 "use client";
@@ -49,11 +51,11 @@ const CHART_COLORS = [
 ];
 
 /**
- * Analytics Page
+ * Business Insights Page
  *
- * @returns {JSX.Element} Analytics page
+ * @returns {JSX.Element} Business insights page
  */
-export default function AnalyticsPage() {
+export default function BusinessInsightsPage() {
   const { data: analytics, isLoading } = useAnalytics();
 
   // Prepare data for rating distribution chart
@@ -63,13 +65,15 @@ export default function AnalyticsPage() {
       count: item.count,
     })) ?? [];
 
-  // Prepare data for feedback by project chart
-  const projectData = analytics?.feedbackByProject ?? [];
+  // Prepare data for feedback by project chart (create mutable copy to avoid read-only errors)
+  const projectData = analytics?.feedbackByProject
+    ? [...analytics.feedbackByProject]
+    : [];
 
   return (
     <DashboardLayout
-      title="Analytics"
-      description="View analytics and statistics for your feedback"
+      title="Business Insights"
+      description="View business insights and statistics for your feedback"
     >
       <div className="space-y-6">
         {/* Key Statistics */}
@@ -176,7 +180,7 @@ export default function AnalyticsPage() {
           >
             <ResponsiveContainer width="100%" height={300}>
               <BarChart
-                data={projectData.sort((a, b) => b.count - a.count)}
+                data={[...projectData].sort((a, b) => b.count - a.count)}
                 layout="vertical"
               >
                 <CartesianGrid strokeDasharray="3 3" />
