@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Widget Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Feedback Widget Test</h1>
+    <p>Click the Feedback button in the bottom right corner to test the widget.</p>
+    
+    <!-- Load React and ReactDOM (required for the widget) -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Load the widget bundle -->
+    <script src="./widget.umd.js?v=12345"></script>
+    
+    <!-- Use the widget as a custom HTML element -->
+    <my-widget api-base="http://localhost:3000/api/feedback"></my-widget>
+</body>
+</html>
+

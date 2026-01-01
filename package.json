@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build:widget": "vite build --config vite.config.widget.js",
+    "build:widget-css": "npx tailwindcss -i ./src/app/globals.css -o ./public/widget-styles.css --minify && node scripts/inject-css-inline.js",
+    "build:widget": "npm run build:widget-css && vite build --config vite.config.widget.js",
     "build": "npx prisma generate && npx next build && npm run build:widget",
     "start": "next start",
     "lint": "next lint",
