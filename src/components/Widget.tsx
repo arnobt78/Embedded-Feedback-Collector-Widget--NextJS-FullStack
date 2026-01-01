@@ -49,18 +49,29 @@ export default function Widget({ apiBase = "/api/feedback" }: WidgetProps) {
   // Close popover when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      // Get the actual target element
+      const target = event.target as Node;
+
+      // Check if the click is outside the popover
+      // We need to check both the popover and if the target is inside any widget element
       if (
         popoverRef.current &&
-        !popoverRef.current.contains(event.target as Node)
+        !popoverRef.current.contains(target) &&
+        // Additional check: ensure we're not clicking inside any input/textarea/button
+        !(target instanceof HTMLInputElement) &&
+        !(target instanceof HTMLTextAreaElement) &&
+        !(target instanceof HTMLButtonElement) &&
+        !(target as HTMLElement).closest?.("form")
       ) {
         setIsOpen(false);
       }
     };
 
     if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
+      // Use capture phase to handle the event before it bubbles
+      document.addEventListener("mousedown", handleClickOutside, true);
       return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
+        document.removeEventListener("mousedown", handleClickOutside, true);
       };
     }
   }, [isOpen]);
@@ -193,6 +204,14 @@ export default function Widget({ apiBase = "/api/feedback" }: WidgetProps) {
               zIndex: 999999,
               backdropFilter: "blur(16px)",
               transition: "all 0.2s",
+            }}
+            onClick={(e) => {
+              // Prevent clicks inside the popup from closing it
+              e.stopPropagation();
+            }}
+            onMouseDown={(e) => {
+              // Prevent mousedown from bubbling up
+              e.stopPropagation();
             }}
           >
             {submitted ? (
