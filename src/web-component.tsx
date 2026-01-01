@@ -115,7 +115,11 @@ export { WidgetWebComponent };
  * Placed after export to ensure it executes in UMD bundles.
  */
 (function registerWidget() {
-  if (typeof window !== "undefined" && typeof customElements !== "undefined" && !customElements.get("my-widget")) {
+  if (
+    typeof window !== "undefined" &&
+    typeof customElements !== "undefined" &&
+    !customElements.get("my-widget")
+  ) {
     customElements.define("my-widget", WidgetWebComponent);
   }
 })();
