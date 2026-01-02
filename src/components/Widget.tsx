@@ -23,6 +23,7 @@ import { useState, FormEvent, useEffect, useRef } from "react";
 
 interface WidgetProps {
   apiBase?: string;
+  apiKey?: string;
 }
 
 /**
@@ -30,9 +31,10 @@ interface WidgetProps {
  *
  * @param props - Component props
  * @param props.apiBase - The API endpoint URL for submitting feedback (defaults to "/api/feedback")
+ * @param props.apiKey - API key for project association (optional, if not provided uses default project)
  * @returns The feedback widget component
  */
-export default function Widget({ apiBase = "/api/feedback" }: WidgetProps) {
+export default function Widget({ apiBase = "/api/feedback", apiKey }: WidgetProps) {
   // State management using React hooks
   // rating: Current selected star rating (1-5), defaults to 3
   const [rating, setRating] = useState<number>(3);
@@ -131,9 +133,16 @@ export default function Widget({ apiBase = "/api/feedback" }: WidgetProps) {
 
     // POST to configurable API endpoint
     try {
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      
+      // Add API key header if provided (for project association)
+      if (apiKey) {
+        headers["X-API-Key"] = apiKey;
+      }
+
       const res = await fetch(apiBase, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ name, email, message, rating }), // Send all form data as JSON
       });
 

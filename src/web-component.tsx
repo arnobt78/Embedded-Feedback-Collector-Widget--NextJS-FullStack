@@ -38,6 +38,7 @@ export const normalizeAttribute = (attribute: string): string => {
 interface WidgetProps {
   [key: string]: string | undefined;
   apiBase?: string;
+  apiKey?: string;
 }
 
 /**
@@ -75,7 +76,7 @@ class WidgetWebComponent extends HTMLElement {
         {/* Inline Tailwind styles for Shadow DOM */}
         <style dangerouslySetInnerHTML={{ __html: widgetStyles }} />
         {/* Render the Widget component with props */}
-        <Widget {...props} apiBase={props.apiBase} />
+        <Widget {...props} apiBase={props.apiBase} apiKey={props.apiKey} />
       </>
     );
   }
