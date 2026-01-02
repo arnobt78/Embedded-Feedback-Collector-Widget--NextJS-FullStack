@@ -64,6 +64,8 @@ The widget is built as a **Web Component** using Shadow DOM for style isolation,
 
 ### Dashboard Features
 
+- 🔐 **Authentication System**: Secure user authentication with email/password and Google OAuth
+- 👤 **User Accounts**: Individual user accounts with complete data isolation
 - 📊 **Overview Dashboard**: Key statistics and metrics at a glance
 - 📝 **Feedback Management**: View, filter, sort, and search all feedback entries
 - 🗂️ **Project Management**: Create, edit, and manage multiple projects
@@ -99,6 +101,8 @@ The widget is built as a **Web Component** using Shadow DOM for style isolation,
 - **Next.js API Routes** - Serverless API endpoints
 - **Prisma ORM** - Type-safe database client
 - **MongoDB** - NoSQL document database
+- **NextAuth.js v5** - Authentication library with JWT sessions
+- **bcryptjs** - Password hashing for secure authentication
 
 ### Build Tools
 
@@ -164,9 +168,11 @@ npm run dev
 
 1. **Open your browser**
 
-Visit [http://localhost:3000](http://localhost:3000) to see the homepage with the widget.
+Visit [http://localhost:3000](http://localhost:3000) - you'll be redirected to the sign-in page.
 
-Visit [http://localhost:3000/dashboard](http://localhost:3000/dashboard) to access the dashboard.
+Visit [http://localhost:3000/auth/signin](http://localhost:3000/auth/signin) to sign in or create an account.
+
+Visit [http://localhost:3000/dashboard](http://localhost:3000/dashboard) to access the dashboard (requires authentication).
 
 ---
 
@@ -186,6 +192,16 @@ DATABASE_URL="mongodb://localhost:27017/feedback_widget_db"
 
 # Format for MongoDB with authentication:
 DATABASE_URL="mongodb://<username>:<password>@<host>:<port>/<dbname>?authSource=<auth-db>"
+
+# NextAuth.js Configuration
+# Generate a random secret: openssl rand -base64 32
+AUTH_SECRET="your-random-secret-key-here"
+NEXTAUTH_URL="http://localhost:3000"  # For local development
+# For production: NEXTAUTH_URL="https://your-domain.com"
+
+# Google OAuth (Optional - for Google sign-in)
+GOOGLE_CLIENT_ID="your-google-client-id"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
 ```
 
 ### Getting Your MongoDB Connection String
@@ -229,6 +245,32 @@ Then use:
 DATABASE_URL="mongodb://localhost:27017/feedback_widget_db"
 ```
 
+### Getting Your Authentication Secrets
+
+#### AUTH_SECRET
+
+Generate a random secret key for NextAuth.js:
+
+```bash
+openssl rand -base64 32
+```
+
+Or use any secure random string generator. This secret is used to encrypt JWT tokens.
+
+#### Google OAuth Credentials (Optional)
+
+If you want to enable Google sign-in:
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select an existing one
+3. Enable Google+ API
+4. Go to "Credentials" → "Create Credentials" → "OAuth 2.0 Client ID"
+5. Configure consent screen (if not done)
+6. Create OAuth client ID for "Web application"
+7. Add authorized redirect URI: `http://localhost:3000/api/auth/callback/google` (development)
+8. Add authorized redirect URI: `https://your-domain.com/api/auth/callback/google` (production)
+9. Copy the Client ID and Client Secret
+
 ### Example `.env` File
 
 See `.env.example` in the repository for a template:
@@ -238,6 +280,14 @@ See `.env.example` in the repository for a template:
 # Replace <username>, <password>, <cluster-url>, <dbname> with your MongoDB details
 
 DATABASE_URL="mongodb+srv://<username>:<password>@<cluster-url>/<dbname>?retryWrites=true&w=majority&appName=<dbname>"
+
+# NextAuth Configuration
+AUTH_SECRET="your-random-secret-key-here"
+NEXTAUTH_URL="http://localhost:3000"
+
+# Google OAuth (Optional)
+GOOGLE_CLIENT_ID="your-google-client-id"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
 ```
 
 ---
@@ -285,6 +335,8 @@ feedback-widget/
 │   │   └── page.tsx           # Homepage
 │   ├── components/
 │   │   ├── Widget.tsx         # Main feedback widget component
+│   │   ├── auth/              # Authentication components
+│   │   │   └── auth-form.tsx  # Reusable auth form component
 │   │   ├── dashboard/         # Dashboard components
 │   │   │   ├── dashboard-layout.tsx
 │   │   │   ├── sidebar.tsx
@@ -313,6 +365,7 @@ feedback-widget/
 │   │   └── use-analytics.ts   # Analytics data fetching
 │   ├── lib/                   # Utility functions
 │   │   ├── prisma.ts          # Prisma client singleton
+│   │   ├── auth.ts            # NextAuth configuration and exports
 │   │   ├── api-utils.ts       # API helper functions
 │   │   ├── export-utils.ts    # CSV export utilities
 │   │   ├── query-client.ts    # React Query client
@@ -323,6 +376,7 @@ feedback-widget/
 │   ├── widget-styles.ts       # Widget styles export
 │   └── globals.css            # Global styles
 ├── .env.example               # Environment variables template
+├── middleware.ts              # Next.js middleware (route protection)
 ├── next.config.ts             # Next.js configuration
 ├── tailwind.config.js         # Tailwind CSS configuration
 ├── vite.config.widget.js      # Vite config for widget build
@@ -372,7 +426,9 @@ Create a new feedback entry.
 
 #### `GET /api/feedback`
 
-Get all feedback entries (optionally filtered by project).
+Get all feedback entries for authenticated user's projects (optionally filtered by project).
+
+**Authentication:** Required (JWT session)
 
 **Query Parameters:**
 
@@ -401,9 +457,13 @@ Get all feedback entries (optionally filtered by project).
 
 ### Projects API
 
+**Note:** All project endpoints require authentication. Users can only access their own projects.
+
 #### `GET /api/projects`
 
-Get all projects.
+Get all projects for the authenticated user.
+
+**Authentication:** Required (JWT session)
 
 **Response:** `200 OK`
 
@@ -427,7 +487,9 @@ Get all projects.
 
 #### `POST /api/projects`
 
-Create a new project.
+Create a new project (associated with authenticated user).
+
+**Authentication:** Required (JWT session)
 
 **Request Body:**
 
@@ -456,11 +518,15 @@ Create a new project.
 
 #### `GET /api/projects/[id]`
 
-Get a specific project by ID.
+Get a specific project by ID (must belong to authenticated user).
+
+**Authentication:** Required (JWT session)
 
 #### `PUT /api/projects/[id]`
 
-Update a project.
+Update a project (must belong to authenticated user).
+
+**Authentication:** Required (JWT session)
 
 **Request Body:**
 
@@ -476,13 +542,17 @@ Update a project.
 
 #### `DELETE /api/projects/[id]`
 
-Delete a project.
+Delete a project (must belong to authenticated user).
+
+**Authentication:** Required (JWT session)
 
 ### Business Insights API
 
 #### `GET /api/business-insights`
 
-Get analytics data.
+Get analytics data for authenticated user's projects.
+
+**Authentication:** Required (JWT session)
 
 **Query Parameters:**
 
@@ -624,12 +694,26 @@ For local development, use:
 
 ## 📊 Dashboard Overview
 
+### Authentication
+
+The dashboard requires user authentication. You can:
+
+- **Sign up** with email and password at `/auth/signup`
+- **Sign in** with email and password at `/auth/signin`
+- **Sign in with Google** (if Google OAuth is configured)
+- Each user has their own isolated projects and feedback data
+
 ### Accessing the Dashboard
 
-After deploying or running locally, access the dashboard at:
+After deploying or running locally:
+
+1. **Sign up or sign in** at the authentication page
+2. Access the dashboard at:
 
 - **Production:** [https://embedded-feedback.vercel.app/dashboard](https://embedded-feedback.vercel.app/dashboard)
 - **Local:** [http://localhost:3000/dashboard](http://localhost:3000/dashboard)
+
+Note: Unauthenticated users will be redirected to the sign-in page automatically.
 
 ### Dashboard Pages
 
@@ -830,11 +914,31 @@ function MyComponent() {
 
 ## 🗄️ Database Schema
 
+### User Model (NextAuth)
+
+```prisma
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  password      String?   // Hashed password (for email/password auth)
+  image         String?   // Profile image URL
+  accounts      Account[] // OAuth accounts
+  sessions      Session[] // Active sessions
+  projects      Project[] // User's projects
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+```
+
 ### Project Model
 
 ```prisma
 model Project {
   id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String     @db.ObjectId // User who owns this project
+  user        User       @relation(fields: [userId], references: [id])
   name        String
   domain      String
   apiKey      String     @unique

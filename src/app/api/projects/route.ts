@@ -13,6 +13,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { withCORS } from "@/lib/api-utils";
+import { auth } from "@/lib/auth";
 import { randomBytes } from "crypto";
 
 /**
@@ -40,19 +41,30 @@ export async function OPTIONS() {
 /**
  * GET Handler - List All Projects
  * 
- * Fetches all projects from the database, ordered by creation date (newest first).
+ * Fetches all projects for the authenticated user, ordered by creation date (newest first).
  * 
  * @param {Request} request - The incoming HTTP request
  * @returns {NextResponse} JSON response with array of projects or error
  * 
  * Status Codes:
  * - 200: Successfully retrieved
+ * - 401: Unauthorized (not authenticated)
  * - 500: Database/server error
  */
 export async function GET() {
   try {
-    // Fetch all projects, ordered by newest first
-    const projects = await prisma.project.findMany({
+    // Check authentication
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    // Fetch all projects and filter by userId (workaround for Prisma MongoDB ObjectId comparison issue)
+    // This is needed because Prisma's where clause sometimes fails with ObjectId comparisons
+    const allProjects = await prisma.project.findMany({
       orderBy: { createdAt: "desc" }, // Most recent first
       include: {
         _count: {
@@ -62,6 +74,19 @@ export async function GET() {
         },
       },
     });
+    
+    // Filter projects for authenticated user
+    const userId = session.user?.id;
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+    const projects = allProjects.filter(
+      (project) => project.userId === userId
+    );
+    
     return withCORS(NextResponse.json(projects, { status: 200 })); // 200 = OK
   } catch (error) {
     // Catch any database errors
@@ -76,7 +101,7 @@ export async function GET() {
  * POST Handler - Create New Project
  * 
  * Accepts project data (name, domain, description) and creates a new project
- * with a generated API key.
+ * with a generated API key, associated with the authenticated user.
  * 
  * Request Body:
  * - name: Project name (required)
@@ -90,10 +115,20 @@ export async function GET() {
  * Status Codes:
  * - 201: Successfully created
  * - 400: Validation error (missing required fields)
+ * - 401: Unauthorized (not authenticated)
  * - 500: Database/server error
  */
 export async function POST(request: Request) {
   try {
+    // Check authentication
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     // Parse JSON body from request
     const body = await request.json();
     const { name, domain, description, isActive } = body;
@@ -111,9 +146,10 @@ export async function POST(request: Request) {
     // Generate unique API key for the project
     const apiKey = generateApiKey();
     
-    // Create project in database
+    // Create project in database, associated with authenticated user
     const project = await prisma.project.create({
       data: {
+        userId: session.user.id, // Associate with authenticated user
         name: name.trim(),
         domain: domain.trim(),
         description: description?.trim() || null,

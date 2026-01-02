@@ -17,6 +17,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { withCORS } from "@/lib/api-utils";
+import { auth } from "@/lib/auth";
 
 /**
  * OPTIONS Handler - CORS Preflight Request
@@ -50,12 +51,59 @@ export async function OPTIONS() {
  */
 export async function GET(request: Request) {
   try {
+    // Check authentication
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     // Parse query parameters from URL
     const { searchParams } = new URL(request.url);
     const projectId = searchParams.get("projectId");
 
-    // Build query filter with optional project filter
-    const where = projectId ? { projectId: projectId } : {};
+    // If projectId provided, verify it belongs to the authenticated user
+    if (projectId) {
+      const project = await prisma.project.findUnique({
+        where: { id: projectId },
+        select: { userId: true },
+      });
+
+      if (!project) {
+        return NextResponse.json(
+          { error: "Project not found" },
+          { status: 404 }
+        );
+      }
+
+      if (project.userId !== session.user.id) {
+        return NextResponse.json(
+          { error: "Forbidden" },
+          { status: 403 }
+        );
+      }
+    }
+
+    // Get user's project IDs (workaround for Prisma MongoDB ObjectId comparison issue)
+    const allProjects = await prisma.project.findMany({
+      select: { id: true, userId: true },
+    });
+    const userId = session.user?.id;
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+    const userProjects = allProjects.filter((p) => p.userId === userId);
+    const userProjectIds = userProjects.map((p) => p.id);
+
+    // Build query filter: only feedback from user's projects
+    const where = projectId
+      ? { projectId: projectId } // If projectId provided, use it (already verified)
+      : { projectId: { in: userProjectIds } }; // Otherwise, filter by all user's projects
 
     // Get total feedback count
     const totalFeedback = await prisma.feedback.count({
@@ -167,14 +215,14 @@ export async function GET(request: Request) {
       },
     });
 
-    // Get total projects count (if not filtering by project)
+    // Get total projects count for authenticated user (if not filtering by project)
     const totalProjects = projectId
       ? 1
-      : await prisma.project.count({
-          where: {
-            isActive: true,
-          },
-        });
+      : (await prisma.project.findMany({
+          select: { userId: true, isActive: true },
+        })).filter(
+          (p) => p.userId === userId && p.isActive === true
+        ).length;
 
     // Build insights response
     const insights = {

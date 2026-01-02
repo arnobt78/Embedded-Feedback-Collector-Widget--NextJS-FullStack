@@ -32,13 +32,86 @@ datasource db {
   url      = env("DATABASE_URL") // Connection string from .env file
 }
 
+// User Model (NextAuth)
+//
+// Represents a user account in the system.
+// Users can authenticate via email/password or OAuth providers.
+//
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  password      String?   // Hashed password (only for email/password users)
+  image         String?   // Profile image URL (from OAuth or uploaded)
+  accounts      Account[] // OAuth accounts linked to this user
+  sessions      Session[] // Active sessions
+  projects      Project[] // User's projects
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// Account Model (NextAuth - OAuth)
+//
+// Stores OAuth provider accounts linked to users.
+// Allows users to sign in with Google, GitHub, etc.
+//
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String  // OAuth provider type (e.g., "oauth", "credentials")
+  provider          String  // Provider name (e.g., "google", "github")
+  providerAccountId String  // User's ID from the OAuth provider
+  refresh_token     String? // OAuth refresh token
+  access_token      String? // OAuth access token
+  expires_at        Int?    // Token expiration timestamp
+  token_type        String?
+  scope             String?
+  id_token          String? // OpenID Connect ID token
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+// Session Model (NextAuth)
+//
+// Stores user sessions for authentication.
+//
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// VerificationToken Model (NextAuth)
+//
+// Stores email verification and password reset tokens.
+//
+model VerificationToken {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String   // Email address or other identifier
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
 // Project Model
 // 
 // Represents a connected project/application that uses the feedback widget.
 // Each project gets a unique API key for authentication.
+// Projects belong to a user (multi-user support).
 // 
 // Field Descriptions:
 // - id: Unique identifier (MongoDB ObjectId)
+// - userId: Foreign key to User model (required for user isolation)
+// - user: Relation to User model
 // - name: Project name (e.g., "E-commerce Site", "Marketing Page")
 // - domain: Project domain/URL (e.g., "https://myproject.com")
 // - apiKey: Unique API key for authenticating feedback submissions from this project
@@ -56,9 +129,11 @@ datasource db {
 // - @unique: Ensures API key is unique across all projects
 // - @default(now()): Auto-set to current time on creation
 // - @updatedAt: Auto-update timestamp on record modification
-// - @relation: One-to-many relationship with Feedback model
+// - @relation: One-to-many relationship with Feedback model, many-to-one with User
 model Project {
   id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String     @db.ObjectId // User who owns this project (required)
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   name        String     // Project name (required)
   domain      String     // Project domain/URL (required)
   apiKey      String     @unique // Unique API key for project authentication
@@ -67,6 +142,8 @@ model Project {
   createdAt   DateTime   @default(now()) // Auto-set to current time on creation
   updatedAt   DateTime   @updatedAt // Auto-update timestamp on modification
   feedbacks   Feedback[] // One-to-many relation: one project can have many feedback entries
+
+  @@index([userId]) // Index for faster user-based queries
 }
 
 // Feedback Model

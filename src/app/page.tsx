@@ -2,27 +2,21 @@
  * Home Page Component
  *
  * The main landing page of the application.
- * Displays the feedback widget centered on the page.
+ * Redirects to sign-in page for authentication.
  *
- * This is a Server Component by default in Next.js App Router.
- * The Widget component inside is a Client Component (marked with "use client").
+ * This is a Server Component that redirects unauthenticated users to the sign-in page.
  */
 
-import Widget from "@/components/Widget";
+import { redirect } from "next/navigation";
 
 /**
  * Home Page
  *
- * Simple page that centers the feedback widget on the screen.
- * Uses Tailwind CSS for styling with flexbox for centering.
+ * Redirects to the sign-in page.
+ * Authenticated users will be redirected to dashboard by middleware.
  *
- * @returns {JSX.Element} Home page with centered widget
+ * @returns {never} Always redirects
  */
 export default function Home() {
-  return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50">
-      {/* Widget component is rendered here - it will appear as a floating button */}
-      <Widget />
-    </main>
-  );
+  redirect("/auth/signin");
 }

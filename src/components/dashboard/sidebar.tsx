@@ -17,7 +17,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,6 +36,7 @@ import {
   BarChart3,
   Menu,
   Home,
+  LogOut,
 } from "lucide-react";
 
 interface NavItem {
@@ -82,6 +84,16 @@ const navItems: NavItem[] = [
  */
 function SidebarContent({ mobile = false }: { mobile?: boolean }) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  /**
+   * Handle logout
+   */
+  const handleLogout = async () => {
+    await signOut({ redirect: false });
+    router.push("/auth/signin");
+    router.refresh();
+  };
 
   return (
     <div className={cn("flex flex-col h-full", mobile && "overflow-y-auto")}>
@@ -121,8 +133,18 @@ function SidebarContent({ mobile = false }: { mobile?: boolean }) {
 
       <Separator />
 
-      {/* Footer */}
-      <div className="p-4 text-sm text-white/60">Dashboard v1.0.0</div>
+      {/* Logout Button */}
+      <div className={cn("p-4 space-y-2", mobile && "pb-4")}>
+        <Button
+          variant="ghost"
+          onClick={handleLogout}
+          className="w-full justify-start gap-2 text-white/80 hover:text-white hover:bg-white/10"
+        >
+          <LogOut className="h-4 w-4" />
+          <span>Log out</span>
+        </Button>
+        <div className="text-sm text-white/60">Dashboard v1.0.0</div>
+      </div>
     </div>
   );
 }

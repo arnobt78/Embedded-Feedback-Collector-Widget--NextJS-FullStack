@@ -15,6 +15,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { withCORS, getProjectByApiKey, getDefaultProject } from "@/lib/api-utils";
+import { auth } from "@/lib/auth";
 
 /**
  * OPTIONS Handler - CORS Preflight Request
@@ -103,31 +104,80 @@ export async function POST(request: Request) {
 /**
  * GET Handler - Retrieve All Feedback Entries
  * 
- * Fetches feedback entries from the database, ordered by creation date (newest first).
- * Optionally filters by projectId via query parameter.
+ * Fetches feedback entries for the authenticated user's projects, ordered by creation date (newest first).
+ * Optionally filters by projectId via query parameter (must belong to authenticated user).
  * 
  * Query Parameters:
- * - projectId (optional): Filter feedback by project ID
+ * - projectId (optional): Filter feedback by project ID (must belong to authenticated user)
  * 
  * @param {Request} request - The incoming HTTP request
  * @returns {NextResponse} JSON response with array of feedback entries or error
  * 
  * Status Codes:
  * - 200: Successfully retrieved
+ * - 401: Unauthorized (not authenticated)
+ * - 403: Forbidden (project doesn't belong to user)
  * - 500: Database/server error
  */
 export async function GET(request: Request) {
   try {
+    // Check authentication
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     // Parse query parameters from URL
     const { searchParams } = new URL(request.url);
     const projectId = searchParams.get("projectId");
 
-    // Build query with optional project filter
-    const where = projectId ? { projectId: projectId } : {};
+    // If projectId provided, verify it belongs to the authenticated user
+    if (projectId) {
+      const project = await prisma.project.findUnique({
+        where: { id: projectId },
+        select: { userId: true },
+      });
+
+      if (!project) {
+        return NextResponse.json(
+          { error: "Project not found" },
+          { status: 404 }
+        );
+      }
+
+      if (project.userId !== session.user.id) {
+        return NextResponse.json(
+          { error: "Forbidden" },
+          { status: 403 }
+        );
+      }
+    }
+
+    // Get user's project IDs (workaround for Prisma MongoDB ObjectId comparison issue)
+    const allProjects = await prisma.project.findMany({
+      select: { id: true, userId: true },
+    });
+    const userId = session.user?.id;
+    if (!userId) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+    const userProjects = allProjects.filter((p) => p.userId === userId);
+    const userProjectIds = userProjects.map((p) => p.id);
+
+    // Build query filter: only feedback from user's projects
+    const where = projectId
+      ? { projectId: projectId } // If projectId provided, use it (already verified)
+      : { projectId: { in: userProjectIds } }; // Otherwise, filter by all user's projects
 
     // Fetch feedback entries, ordered by newest first
     const feedbacks = await prisma.feedback.findMany({
-      where: where, // Filter by project if projectId provided
+      where: where,
       orderBy: { createdAt: "desc" }, // Most recent first
       include: {
         project: {

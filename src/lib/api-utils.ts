@@ -95,8 +95,18 @@ export async function getDefaultProject(): Promise<{ id: string }> {
       const { randomBytes } = await import("crypto");
       const apiKey = randomBytes(16).toString("hex");
 
+      // Find first user to assign default project to (for backward compatibility)
+      const firstUser = await prisma.user.findFirst({
+        select: { id: true },
+      });
+
+      if (!firstUser) {
+        throw new Error("No users found. Please create a user account first.");
+      }
+
       defaultProject = await prisma.project.create({
         data: {
+          userId: firstUser.id, // Assign to first user for backward compatibility
           name: "Default Project",
           domain: "https://localhost:3000",
           apiKey: apiKey,
