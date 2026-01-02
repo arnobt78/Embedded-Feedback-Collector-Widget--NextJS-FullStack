@@ -182,25 +182,30 @@ export default function Widget({ apiBase = "/api/feedback" }: WidgetProps) {
           className="rounded-full shadow-lg hover:scale-105"
           style={{
             background:
-              "linear-gradient(to right, rgba(59, 130, 246, 0.8), rgba(59, 130, 246, 0.6), rgba(59, 130, 246, 0.4))",
-            boxShadow: "0 15px 35px rgba(59, 130, 246, 0.45)",
-            border: "1px solid rgba(255, 255, 255, 0.1)",
-            backdropFilter: "blur(4px)",
+              "linear-gradient(to right, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.9), rgba(51, 65, 85, 0.85))",
+            boxShadow:
+              "0 15px 35px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(59, 130, 246, 0.4)",
+            border: "1px solid rgba(59, 130, 246, 0.5)",
+            backdropFilter: "blur(8px)",
             transition: "all 0.2s",
+            color: "white",
           }}
           onClick={() => setIsOpen(!isOpen)}
           onMouseEnter={(e) => {
             e.currentTarget.style.background =
-              "linear-gradient(to right, rgba(59, 130, 246, 0.9), rgba(59, 130, 246, 0.7), rgba(59, 130, 246, 0.5))";
-            e.currentTarget.style.borderColor = "rgba(147, 197, 253, 0.4)";
+              "linear-gradient(to right, rgba(15, 23, 42, 1), rgba(30, 41, 59, 0.95), rgba(51, 65, 85, 0.9))";
+            e.currentTarget.style.borderColor = "rgba(59, 130, 246, 0.7)";
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.background =
-              "linear-gradient(to right, rgba(59, 130, 246, 0.8), rgba(59, 130, 246, 0.6), rgba(59, 130, 246, 0.4))";
-            e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.1)";
+              "linear-gradient(to right, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.9), rgba(51, 65, 85, 0.85))";
+            e.currentTarget.style.borderColor = "rgba(59, 130, 246, 0.5)";
           }}
         >
-          <MessageCircleIcon className="mr-2 h-5 w-5" />
+          <MessageCircleIcon
+            className="mr-2 h-5 w-5"
+            style={{ color: "white" }}
+          />
           Feedback
         </Button>
         {isOpen && (
