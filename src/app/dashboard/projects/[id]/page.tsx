@@ -19,6 +19,16 @@ import { Copy, RefreshCw, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import type { UpdateProjectInput } from "@/types";
 import { useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface ProjectDetailPageProps {
   params: Promise<{
@@ -39,6 +49,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   const updateProject = useUpdateProject();
   const [showApiKey, setShowApiKey] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [regenerateDialogOpen, setRegenerateDialogOpen] = useState(false);
 
   const handleSubmit = async (data: UpdateProjectInput) => {
     const updatedProject = await updateProject.mutateAsync({ id, data });
@@ -59,25 +70,29 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
     }
   };
 
-  const handleRegenerateApiKey = async () => {
-    if (
-      !confirm(
-        "Are you sure you want to regenerate the API key? The old key will no longer work."
-      )
-    ) {
-      return;
-    }
+  const openRegenerateDialog = () => {
+    setRegenerateDialogOpen(true);
+  };
 
-    await updateProject.mutateAsync({
-      id,
-      data: {
-        name: project!.name,
-        domain: project!.domain,
-        description: project!.description ?? "",
-        isActive: project!.isActive,
-        regenerateApiKey: true,
-      },
-    });
+  const handleRegenerateApiKey = async () => {
+    try {
+      const updatedProject = await updateProject.mutateAsync({
+        id,
+        data: {
+          name: project!.name,
+          domain: project!.domain,
+          description: project!.description ?? "",
+          isActive: project!.isActive,
+          regenerateApiKey: true,
+        },
+      });
+      setRegenerateDialogOpen(false);
+      toast.success(`API key regenerated successfully for "${updatedProject.name}"`);
+      // Reset showApiKey to show the new key
+      setShowApiKey(true);
+    } catch (error) {
+      toast.error("Failed to regenerate API key");
+    }
   };
 
   if (isLoading) {
@@ -168,7 +183,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={handleRegenerateApiKey}
+                  onClick={openRegenerateDialog}
                   disabled={updateProject.isPending}
                 >
                   <RefreshCw className="mr-2 h-4 w-4" />
@@ -186,6 +201,27 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
           isLoading={updateProject.isPending}
           submitLabel="Update Project"
         />
+
+        {/* Regenerate API Key Confirmation Dialog */}
+        <AlertDialog open={regenerateDialogOpen} onOpenChange={setRegenerateDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Regenerate API Key</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to regenerate the API key? The old key will no longer work. You will need to update your widget integration with the new key.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleRegenerateApiKey}
+                disabled={updateProject.isPending}
+              >
+                {updateProject.isPending ? "Regenerating..." : "Regenerate"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </DashboardLayout>
   );

@@ -14,6 +14,16 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { withCORS } from "@/lib/api-utils";
+import { randomBytes } from "crypto";
+
+/**
+ * Generate a secure random API key for a project
+ * 
+ * @returns {string} A random 32-character hexadecimal string
+ */
+function generateApiKey(): string {
+  return randomBytes(16).toString("hex");
+}
 
 /**
  * OPTIONS Handler - CORS Preflight Request
@@ -108,7 +118,7 @@ export async function PUT(
     const params = await context.params;
     const { id } = params;
     const body = await request.json();
-    const { name, domain, description, isActive } = body;
+    const { name, domain, description, isActive, regenerateApiKey } = body;
     
     // Check if project exists
     const existingProject = await prisma.project.findUnique({
@@ -127,12 +137,18 @@ export async function PUT(
       domain?: string;
       description?: string | null;
       isActive?: boolean;
+      apiKey?: string;
     } = {};
     
     if (name !== undefined) updateData.name = name.trim();
     if (domain !== undefined) updateData.domain = domain.trim();
     if (description !== undefined) updateData.description = description?.trim() || null;
     if (isActive !== undefined) updateData.isActive = isActive;
+    
+    // Handle API key regeneration
+    if (regenerateApiKey === true) {
+      updateData.apiKey = generateApiKey();
+    }
     
     // If no fields to update, return existing project
     if (Object.keys(updateData).length === 0) {

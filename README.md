@@ -6,7 +6,11 @@ A modern, production-ready feedback collection widget system built with Next.js,
 
 **Live Example (Widget Integration):** [https://embedded-marketing.netlify.app/](https://embedded-marketing.netlify.app/)
 
-<img width="1705" height="891" alt="Screenshot 2026-01-02 at 15 33 55" src="https://github.com/user-attachments/assets/a2acd925-e35d-43ec-a85e-39aeec1645b1" /> <img width="1913" height="642" alt="Screenshot 2026-01-02 at 15 34 31" src="https://github.com/user-attachments/assets/300acffd-41b2-4977-ba6d-16a11e7c1743" /> <img width="1915" height="720" alt="Screenshot 2026-01-02 at 15 34 53" src="https://github.com/user-attachments/assets/da7d0c3d-e273-4964-8344-42dd2ada6bb3" /> <img width="1909" height="548" alt="Screenshot 2026-01-02 at 15 35 12" src="https://github.com/user-attachments/assets/f001f0eb-0085-4052-899b-3c42d6b56e8b" /> <img width="1829" height="898" alt="Screenshot 2026-01-02 at 15 35 50" src="https://github.com/user-attachments/assets/bf4920ea-11d5-4ee7-83ae-d57fa8544a8e" />
+![Screenshot 2026-01-02 at 15 33 55](https://github.com/user-attachments/assets/a2acd925-e35d-43ec-a85e-39aeec1645b1)
+![Screenshot 2026-01-02 at 15 34 31](https://github.com/user-attachments/assets/300acffd-41b2-4977-ba6d-16a11e7c1743)
+![Screenshot 2026-01-02 at 15 34 53](https://github.com/user-attachments/assets/da7d0c3d-e273-4964-8344-42dd2ada6bb3)
+![Screenshot 2026-01-02 at 15 35 12](https://github.com/user-attachments/assets/f001f0eb-0085-4052-899b-3c42d6b56e8b)
+![Screenshot 2026-01-02 at 15 35 50](https://github.com/user-attachments/assets/bf4920ea-11d5-4ee7-83ae-d57fa8544a8e)
 
 ## 📋 Table of Contents
 
