@@ -2,7 +2,9 @@
 
 A modern, production-ready feedback collection widget system built with Next.js, React, TypeScript, Prisma, and MongoDB. This project provides an embeddable web component that can be integrated into any website, along with a comprehensive dashboard for managing projects, viewing feedback, and analyzing insights.
 
-**Live-Demo:** [https://embedded-feedback.vercel.app/dashboard](https://embedded-feedback.vercel.app/dashboard)
+**Live-Demo Dashboard:** [https://embedded-feedback.vercel.app/dashboard](https://embedded-feedback.vercel.app/dashboard)
+
+**Live Example (Widget Integration):** [https://embedded-marketing.netlify.app/](https://embedded-marketing.netlify.app/)
 
 ---
 
@@ -512,6 +514,13 @@ Get analytics data.
 ---
 
 ## 🔧 Widget Integration Guide
+
+### Live Example
+
+See the widget in action on a real website:
+
+- **Example Site:** [https://embedded-marketing.netlify.app/](https://embedded-marketing.netlify.app/)
+- This demonstrates the widget integrated into a production website (Netlify deployment)
 
 ### Basic Integration
 
