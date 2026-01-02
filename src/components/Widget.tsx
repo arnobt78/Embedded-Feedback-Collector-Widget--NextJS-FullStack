@@ -15,10 +15,8 @@
 "use client"; // Required for Next.js App Router - marks this as a Client Component (runs in browser)
 
 import { Button } from "./ui/button";
-import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { Separator } from "@/components/ui/separator";
 import { useState, FormEvent, useEffect, useRef } from "react";
 
 interface WidgetProps {
@@ -34,7 +32,10 @@ interface WidgetProps {
  * @param props.apiKey - API key for project association (optional, if not provided uses default project)
  * @returns The feedback widget component
  */
-export default function Widget({ apiBase = "/api/feedback", apiKey }: WidgetProps) {
+export default function Widget({
+  apiBase = "/api/feedback",
+  apiKey,
+}: WidgetProps) {
   // State management using React hooks
   // rating: Current selected star rating (1-5), defaults to 3
   const [rating, setRating] = useState<number>(3);
@@ -68,12 +69,14 @@ export default function Widget({ apiBase = "/api/feedback", apiKey }: WidgetProp
     };
 
     // Add a small delay to prevent immediate closure when opening
+    // Capture ref value for cleanup to avoid stale closure warning
+    const currentRef = popoverRef.current;
     const timeoutId = setTimeout(() => {
       // Listen on document for regular pages
       document.addEventListener("mousedown", handleClickOutside);
 
       // Also listen on the shadow root if we're inside one
-      const rootNode = popoverRef.current?.getRootNode();
+      const rootNode = currentRef?.getRootNode();
       if (rootNode && rootNode !== document) {
         rootNode.addEventListener(
           "mousedown",
@@ -86,8 +89,8 @@ export default function Widget({ apiBase = "/api/feedback", apiKey }: WidgetProp
       clearTimeout(timeoutId);
       document.removeEventListener("mousedown", handleClickOutside);
 
-      // Cleanup shadow root listener
-      const rootNode = popoverRef.current?.getRootNode();
+      // Cleanup shadow root listener (use captured ref value)
+      const rootNode = currentRef?.getRootNode();
       if (rootNode && rootNode !== document) {
         rootNode.removeEventListener(
           "mousedown",
@@ -133,8 +136,10 @@ export default function Widget({ apiBase = "/api/feedback", apiKey }: WidgetProp
 
     // POST to configurable API endpoint
     try {
-      const headers: Record<string, string> = { "Content-Type": "application/json" };
-      
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+
       // Add API key header if provided (for project association)
       if (apiKey) {
         headers["X-API-Key"] = apiKey;
@@ -346,11 +351,8 @@ export default function Widget({ apiBase = "/api/feedback", apiKey }: WidgetProp
                     }}
                   />
                   <div
-                    className="backdrop-blur-md"
+                    className="backdrop-blur-md flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0"
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
                       background: "rgba(15, 23, 42, 0.5)",
                       padding: "0.875rem",
                       borderRadius: "12px",
@@ -361,9 +363,8 @@ export default function Widget({ apiBase = "/api/feedback", apiKey }: WidgetProp
                     {/* Creates 5 clickable stars using Array spread and map */}
                     {/* Visual state: filled (yellow) for selected, empty (gray) for unselected */}
                     <div
+                      className="w-full sm:w-auto flex items-center justify-center sm:justify-start"
                       style={{
-                        display: "flex",
-                        alignItems: "center",
                         gap: "0.5rem",
                       }}
                     >
@@ -389,7 +390,7 @@ export default function Widget({ apiBase = "/api/feedback", apiKey }: WidgetProp
                     <Button
                       type="submit"
                       disabled={loading}
-                      className="backdrop-blur-sm"
+                      className="backdrop-blur-sm w-full sm:w-auto"
                       style={{
                         background:
                           "linear-gradient(to right, rgba(16, 185, 129, 0.85), rgba(16, 185, 129, 0.7), rgba(5, 150, 105, 0.6))",

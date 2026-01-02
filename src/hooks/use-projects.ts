@@ -173,7 +173,6 @@ export function useCreateProject() {
     onSuccess: () => {
       // Invalidate and refetch projects list
       queryClient.invalidateQueries({ queryKey: projectKeys.list() });
-      toast.success("Project created successfully");
     },
     onError: (error: Error) => {
       toast.error(error.message || "Failed to create project");
@@ -198,7 +197,6 @@ export function useUpdateProject() {
       // Invalidate projects list and specific project
       queryClient.invalidateQueries({ queryKey: projectKeys.list() });
       queryClient.invalidateQueries({ queryKey: projectKeys.detail(data.id) });
-      toast.success("Project updated successfully");
     },
     onError: (error: Error) => {
       toast.error(error.message || "Failed to update project");
@@ -221,7 +219,6 @@ export function useDeleteProject() {
     onSuccess: () => {
       // Invalidate projects list
       queryClient.invalidateQueries({ queryKey: projectKeys.list() });
-      toast.success("Project deleted successfully");
     },
     onError: (error: Error) => {
       toast.error(error.message || "Failed to delete project");

@@ -40,7 +40,7 @@ import {
 import { Button } from "@/components/ui/button";
 import type { Feedback } from "@/types";
 import { format } from "date-fns";
-import { ChevronUp, ChevronDown, ArrowUpDown } from "lucide-react";
+import { ChevronUp, ChevronDown, ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import {
   DropdownMenu,
@@ -307,11 +307,11 @@ export function FeedbackTable({
           onSearchChange={setSearchQuery}
           onClearFilters={handleClearFilters}
         />
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
           <Button 
             variant="outline" 
             onClick={handleExportCSV}
-            className="border-white/20 bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm shadow-[0_10px_30px_rgba(16,185,129,0.15)]"
+            className="w-full sm:w-auto border-white/20 bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm shadow-[0_10px_30px_rgba(16,185,129,0.15)]"
           >
             <Download className="mr-2 h-4 w-4" />
             Export CSV
@@ -320,7 +320,7 @@ export function FeedbackTable({
             <DropdownMenuTrigger asChild>
               <Button 
                 variant="outline"
-                className="border-white/20 bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm shadow-[0_10px_30px_rgba(139,92,246,0.15)]"
+                className="w-full sm:w-auto border-white/20 bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm shadow-[0_10px_30px_rgba(139,92,246,0.15)]"
               >
                 Columns
               </Button>
@@ -401,21 +401,31 @@ export function FeedbackTable({
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between">
-        <div className="text-sm text-muted-foreground">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="text-sm text-muted-foreground break-words">
           Showing {table.getRowModel().rows.length} of {filteredData.length}{" "}
           entries
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center justify-center gap-2">
           <Button
             variant="outline"
             size="sm"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
+            className="sm:hidden"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+            className="hidden sm:flex"
           >
             Previous
           </Button>
-          <div className="text-sm text-muted-foreground">
+          <div className="text-sm text-muted-foreground whitespace-nowrap">
             Page {table.getState().pagination.pageIndex + 1} of{" "}
             {table.getPageCount()}
           </div>
@@ -424,8 +434,18 @@ export function FeedbackTable({
             size="sm"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
+            className="hidden sm:flex"
           >
             Next
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+            className="sm:hidden"
+          >
+            <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
       </div>

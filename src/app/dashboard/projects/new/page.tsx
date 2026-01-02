@@ -12,6 +12,7 @@ import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
 import { ProjectForm } from "@/components/dashboard/project-form";
 import { useCreateProject } from "@/hooks/use-projects";
 import type { CreateProjectInput } from "@/types";
+import { toast } from "sonner";
 
 /**
  * New Project Page
@@ -23,7 +24,8 @@ export default function NewProjectPage() {
   const createProject = useCreateProject();
 
   const handleSubmit = async (data: CreateProjectInput) => {
-    await createProject.mutateAsync(data);
+    const project = await createProject.mutateAsync(data);
+    toast.success(`Project "${project.name}" created successfully`);
     router.push("/dashboard/projects");
   };
 

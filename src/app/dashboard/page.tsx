@@ -24,7 +24,7 @@ import {
 import { StatCard } from "@/components/dashboard/stat-card";
 import { useAnalytics } from "@/hooks/use-analytics";
 import { useProjects } from "@/hooks/use-projects";
-import { MessageSquare, FolderKanban, Star, TrendingUp } from "lucide-react";
+import { MessageSquare, FolderKanban, Star, TrendingUp, Calendar, Award, ThumbsUp } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -41,6 +41,11 @@ export default function DashboardPage() {
 
   const isLoading = analyticsLoading || projectsLoading;
   const activeProjectsCount = projects?.filter((p) => p.isActive).length ?? 0;
+  
+  // Calculate high ratings (4-5 stars) from rating distribution
+  const highRatingsCount = analytics?.ratingDistribution
+    ?.filter((item) => item.rating >= 4)
+    .reduce((sum, item) => sum + item.count, 0) ?? 0;
 
   return (
     <DashboardLayout
@@ -49,7 +54,7 @@ export default function DashboardPage() {
     >
       <div className="space-y-6">
         {/* Stats Grid */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           <StatCard
             title="Total Feedback"
             value={analytics?.totalFeedback ?? 0}
@@ -81,6 +86,46 @@ export default function DashboardPage() {
             icon={TrendingUp}
             isLoading={isLoading}
             colorVariant="violet"
+          />
+        </div>
+
+        {/* Additional Stats Grid */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <StatCard
+            title="Last 30 Days"
+            value={analytics?.recent30Days ?? 0}
+            description="Feedback in the last month"
+            icon={Calendar}
+            isLoading={isLoading}
+            colorVariant="blue"
+          />
+          <StatCard
+            title="Rated Feedback"
+            value={analytics?.ratedFeedbackCount ?? 0}
+            description="Feedback with star ratings"
+            icon={Star}
+            isLoading={isLoading}
+            colorVariant="rose"
+          />
+          <StatCard
+            title="High Ratings"
+            value={highRatingsCount}
+            description="4-5 star feedback"
+            icon={Award}
+            isLoading={isLoading}
+            colorVariant="amber"
+          />
+          <StatCard
+            title="Satisfaction Rate"
+            value={
+              analytics?.ratedFeedbackCount && analytics.ratedFeedbackCount > 0
+                ? `${Math.round((highRatingsCount / analytics.ratedFeedbackCount) * 100)}%`
+                : "0%"
+            }
+            description="Percentage of 4-5 star ratings"
+            icon={ThumbsUp}
+            isLoading={isLoading}
+            colorVariant="emerald"
           />
         </div>
 

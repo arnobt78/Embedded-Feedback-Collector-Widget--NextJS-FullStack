@@ -1,873 +1,521 @@
-# Reusable Embedded Feedback Collection System – Next.js FullStack Feedback Widget Project
+# Embedded Feedback Collection System - Next.js, MongoDB FullStack Project
 
-![Screenshot 2025-06-24 at 00 39 22](https://github.com/user-attachments/assets/26adec5e-1b6a-4fd7-ba36-ef77e8997920)
-![Screenshot 2025-06-24 at 00 32 52](https://github.com/user-attachments/assets/fbae9823-52ee-47cf-aa7b-6aa006453a07)
-![Screenshot 2025-06-24 at 00 39 05](https://github.com/user-attachments/assets/ad5163c6-0401-4d1b-812c-0cf1c6119a5a)
+A modern, production-ready feedback collection widget system built with Next.js, React, TypeScript, Prisma, and MongoDB. This project provides an embeddable web component that can be integrated into any website, along with a comprehensive dashboard for managing projects, viewing feedback, and analyzing insights.
+
+**Live-Demo:** [https://embedded-feedback.vercel.app/dashboard](https://embedded-feedback.vercel.app/dashboard)
 
 ---
 
 ## 📋 Table of Contents
 
 1. [Project Overview](#-project-overview)
-2. [Live Demo & Integration](#-live-demo--integration)
-3. [Features](#-features)
-4. [Technology Stack](#️-technology-stack)
-5. [Project Structure](#-project-structure)
-6. [Prerequisites](#-prerequisites)
-7. [Installation Guide](#-installation-guide)
-8. [Environment Variables Setup](#-environment-variables-setup)
-9. [Database Setup](#️-database-setup)
-10. [Running the Project](#️-running-the-project)
-11. [Project Walkthrough](#-project-walkthrough)
-12. [Components Documentation](#-components-documentation)
-13. [API Routes & Endpoints](#-api-routes--endpoints)
-14. [Widget Integration Guide](#-widget-integration-guide)
-15. [Reusing Components in Other Projects](#-reusing-components-in-other-projects)
-16. [Development & Customization](#️-development--customization)
-17. [Building for Production](#-building-for-production)
-18. [Deployment](#-deployment)
-19. [Keywords & Topics](#️-keywords--topics)
-20. [Learn More](#-learn-more)
-21. [About](#-about)
-22. [Conclusion](#-conclusion)
+2. [Features](#-features)
+3. [Technology Stack](#️-technology-stack)
+4. [Getting Started](#-getting-started)
+5. [Environment Variables](#-environment-variables)
+6. [Project Structure](#-project-structure)
+7. [API Endpoints](#-api-endpoints)
+8. [Widget Integration Guide](#-widget-integration-guide)
+9. [Dashboard Overview](#-dashboard-overview)
+10. [Components & Reusability](#-components--reusability)
+11. [Database Schema](#️-database-schema)
+12. [Development Scripts](#-development-scripts)
+13. [Deployment](#-deployment)
+14. [Keywords & Topics](#️-keywords--topics)
+15. [Learning Resources](#-learning-resources)
+16. [Tips & Best Practices](#-tips--best-practices)
+17. [Troubleshooting](#-troubleshooting)
+18. [License](#-license)
 
 ---
 
-## 🎯 Project Overview
+## 📖 Project Overview
 
-**Embedded Feedback Widget** is a modern, production-ready, full-stack feedback collection system built with Next.js. This project demonstrates best practices for building reusable, embeddable web widgets that can be integrated into any website or web application.
+This is a full-stack feedback collection system that allows you to:
 
-### What This Project Does
+- **Embed a feedback widget** into any website using a simple HTML tag
+- **Manage multiple projects** with unique API keys for each project
+- **Collect user feedback** including messages, ratings, and contact information
+- **View and analyze feedback** through a comprehensive dashboard
+- **Export data** in CSV format for further analysis
+- **Monitor analytics** with charts and statistics
 
-- **Collects User Feedback**: Allows users to submit feedback with name, email, message, and a 1-5 star rating
-- **Database Storage**: Stores feedback entries in MongoDB using Prisma ORM
-- **Widget Embedding**: Can be embedded in any HTML page as a standalone web component
-- **API Integration**: Provides RESTful API endpoints for creating and retrieving feedback
-- **Modern UI**: Built with Radix UI primitives and Tailwind CSS for a beautiful, accessible interface
-
-### Educational Value
-
-This project is designed as a comprehensive learning resource covering:
-
-- Next.js App Router architecture
-- React Server and Client Components
-- Web Components and Shadow DOM
-- API Route handlers
-- Database integration with Prisma
-- Modern JavaScript/TypeScript patterns
-- Component reusability and modularity
-- Build tooling and bundling strategies
-
----
-
-## 🌐 Live Demo & Integration
-
-- **Live Widget**: [https://embedded-feedback.vercel.app/](https://embedded-feedback.vercel.app/)
-- **Integrated Example**: [https://embedded-marketing.netlify.app/](https://embedded-marketing.netlify.app//)
-- **Integration Repository**: [Embedded-Widget-Marketing-Interactive-Landing--React-Frontend](https://github.com/arnobt78/Embedded-Widget-Marketing-Interactive-Landing--React-Frontend)
+The widget is built as a **Web Component** using Shadow DOM for style isolation, making it safe to embed in any website without CSS conflicts. The dashboard is a Next.js application with a modern, responsive UI built with Tailwind CSS and shadcn/ui components.
 
 ---
 
 ## ✨ Features
 
-### Core Functionality
+### Widget Features
 
-- **📝 Feedback Collection Form**: User-friendly form with name, email, message fields, and interactive star rating
-- **⭐ Star Rating System**: Interactive 5-star rating component with visual feedback
-- **💾 Database Persistence**: All feedback is stored in MongoDB with timestamps
-- **🔌 RESTful API**: Clean API endpoints for creating and retrieving feedback
-- **🌍 CORS Support**: Cross-origin resource sharing enabled for widget embedding
+- 🎨 **Beautiful UI**: Modern, accessible feedback form with star ratings
+- 🔒 **Style Isolation**: Shadow DOM prevents CSS conflicts with host websites
+- ⚡ **Lightweight**: Optimized bundle size for fast loading
+- 🌐 **Cross-Origin Support**: CORS-enabled for embedding on any domain
+- 🔑 **API Key Authentication**: Associate feedback with specific projects
+- 📱 **Responsive Design**: Works seamlessly on desktop and mobile devices
+- ✨ **Real-time Validation**: Instant form validation and error handling
 
-### Technical Features
+### Dashboard Features
 
-- **🎨 Modern UI Components**: Built with Radix UI for accessibility and Tailwind CSS for styling
-- **🔒 Type Safety**: TypeScript support with gradual typing approach
-- **📦 Web Component Support**: Can be embedded as a custom HTML element (`<my-widget>`)
-- **🚀 Production Ready**: Optimized builds, error handling, and loading states
-- **📱 Responsive Design**: Works seamlessly on desktop and mobile devices
-- **♿ Accessible**: WCAG compliant components with keyboard navigation support
-
-### Developer Experience
-
-- **🛠️ Hot Module Replacement**: Fast development with Turbopack
-- **📝 Comprehensive Comments**: Educational comments throughout codebase
-- **🔍 ESLint Configuration**: Code quality and consistency checks
-- **📚 Well Documented**: Extensive documentation for learning and reference
+- 📊 **Overview Dashboard**: Key statistics and metrics at a glance
+- 📝 **Feedback Management**: View, filter, sort, and search all feedback entries
+- 🗂️ **Project Management**: Create, edit, and manage multiple projects
+- 📈 **Business Insights**: Visual analytics with charts and graphs
+- 🔑 **API Key Management**: Generate, copy, and regenerate API keys
+- 📤 **CSV Export**: Export feedback data for external analysis
+- 🎨 **Dark Mode**: Beautiful dark theme support
+- 📱 **Fully Responsive**: Mobile-first design that works on all screen sizes
 
 ---
 
 ## 🛠️ Technology Stack
 
-### Core Framework & Libraries
+### Frontend
 
-- **Next.js 15.3.8** - React framework with App Router, Server Components, and API Routes
-- **React 18.2.0** - UI library with hooks and functional components
-- **TypeScript 5** - Type-safe JavaScript with gradual typing
-- **Prisma 6.10.0** - Next-generation ORM for database access
-
-### Styling & UI
-
-- **Tailwind CSS 3.4.4** - Utility-first CSS framework
-- **Radix UI** - Unstyled, accessible UI primitives
-  - `@radix-ui/react-popover` - Popover component
-  - `@radix-ui/react-label` - Accessible label component
-  - `@radix-ui/react-separator` - Visual separator
-  - `@radix-ui/react-slot` - Component composition utility
+- **Next.js 15** - React framework with App Router
+- **React 18** - UI library with concurrent features
+- **TypeScript** - Type-safe JavaScript
+- **Tailwind CSS** - Utility-first CSS framework
+- **shadcn/ui** - High-quality React component library
+- **Radix UI** - Unstyled, accessible component primitives
+- **React Hook Form** - Performant forms with validation
+- **Zod** - Schema validation library
+- **TanStack React Query** - Server state management
+- **TanStack React Table** - Powerful table component
+- **Recharts** - Composable charting library
+- **Sonner** - Toast notification library
+- **date-fns** - Date utility library
 - **Lucide React** - Beautiful icon library
-- **class-variance-authority** - Component variant management
-- **clsx** & **tailwind-merge** - Class name utilities
 
-### Database
+### Backend
 
-- **MongoDB** - NoSQL document database (can also use PostgreSQL)
-- **Prisma Client** - Type-safe database client
+- **Next.js API Routes** - Serverless API endpoints
+- **Prisma ORM** - Type-safe database client
+- **MongoDB** - NoSQL document database
 
 ### Build Tools
 
-- **Vite 6.3.5** - Fast build tool for widget bundling
-- **PostCSS** - CSS processing
-- **ESLint** - Code linting
-- **Turbopack** - Next.js's fast bundler (development)
-
-### Deployment
-
-- **Vercel** - Recommended hosting platform (serverless functions, edge network)
+- **Vite** - Fast build tool for widget bundle
+- **Turbopack** - Next.js bundler (development)
+- **TypeScript Compiler** - Type checking and compilation
+- **Tailwind CSS CLI** - CSS processing and minification
 
 ---
 
-## 📁 Project Structure
+## 🚀 Getting Started
 
-Understanding the project structure is crucial for navigation and development:
+### Prerequisites
+
+- **Node.js** 18+ and npm/yarn/pnpm
+- **MongoDB** database (local or cloud like MongoDB Atlas)
+- Basic knowledge of React, Next.js, and TypeScript
+
+### Installation
+
+1. **Clone the repository**
 
 ```bash
-feedback-widget-next/
-├── .env                    # Environment variables (not in git)
-├── .env.example            # Environment variables template
-├── .gitignore              # Git ignore patterns
-├── components.json         # shadcn/ui configuration
-├── eslint.config.mjs       # ESLint configuration
-├── next.config.ts          # Next.js configuration
-├── package.json            # Dependencies and scripts
-├── package-lock.json       # Dependency lock file
-├── postcss.config.js       # PostCSS configuration
-├── tailwind.config.js      # Tailwind CSS configuration
-├── tsconfig.json           # TypeScript configuration
-├── vite.config.widget.js   # Vite config for widget bundling
-│
-├── prisma/
-│   └── schema.prisma       # Database schema definition
-│
-├── public/
-│   ├── favicon.ico         # Site favicon
-│   └── widget.umd.js       # Built widget bundle (generated)
-│
-└── src/
-    ├── app/                # Next.js App Router directory
-    │   ├── api/            # API routes
-    │   │   └── feedback/
-    │   │       └── route.js  # Feedback API endpoints (GET, POST, OPTIONS)
-    │   ├── favicon.ico     # App favicon
-    │   ├── globals.css     # Global styles and CSS variables
-    │   ├── layout.tsx      # Root layout component (metadata, fonts)
-    │   ├── page.jsx        # Home page component
-    │   └── page.module.css # Page-specific styles
-    │
-    ├── components/         # React components
-    │   ├── ui/             # Reusable UI components (shadcn/ui)
-    │   │   ├── button.jsx/tsx    # Button component
-    │   │   ├── card.tsx          # Card component
-    │   │   ├── input.jsx/tsx     # Input field component
-    │   │   ├── label.jsx/tsx     # Label component
-    │   │   ├── popover.jsx/tsx   # Popover component
-    │   │   ├── separator.jsx     # Separator component
-    │   │   └── textarea.jsx/tsx  # Textarea component
-    │   └── Widget.jsx      # Main feedback widget component
-    │
-    ├── lib/                # Utility libraries
-    │   ├── prisma.js       # Prisma client singleton
-    │   ├── utils.js        # Utility functions (JavaScript)
-    │   └── utils.ts        # Utility functions (TypeScript)
-    │
-    └── web-component.jsx   # Web Component wrapper for embedding
+git clone <repository-url>
+cd feedback-widget
 ```
 
-### Key File Explanations
-
-- **`src/app/layout.tsx`**: Root layout that wraps all pages, contains SEO metadata and global fonts
-- **`src/app/page.jsx`**: Home page that displays the widget
-- **`src/app/api/feedback/route.js`**: API route handlers for feedback operations
-- **`src/components/Widget.jsx`**: Main feedback widget component with form and state management
-- **`src/web-component.jsx`**: Web Component wrapper that enables embedding in any HTML page
-- **`src/lib/prisma.js`**: Prisma client singleton to prevent multiple database connections
-- **`prisma/schema.prisma`**: Database schema definition for the Feedback model
-- **`vite.config.widget.js`**: Configuration for building the widget as a UMD bundle
-
----
-
-## 📋 Prerequisites
-
-Before you begin, ensure you have the following installed:
-
-### Required
-
-- **Node.js** 18.x or higher ([Download](https://nodejs.org/))
-- **npm**, **yarn**, **pnpm**, or **bun** package manager
-- **Git** for version control
-- **MongoDB Atlas account** (free tier available) or local MongoDB instance
-
-### Recommended
-
-- **VS Code** with extensions:
-  - ESLint
-  - Prettier
-  - Prisma
-  - Tailwind CSS IntelliSense
-- **MongoDB Compass** for database visualization (optional)
-
-### Knowledge Requirements
-
-- Basic understanding of JavaScript/TypeScript
-- Familiarity with React concepts (hooks, components, props)
-- Basic understanding of REST APIs
-- Basic knowledge of Git
-
----
-
-## 🚀 Installation Guide
-
-Follow these steps to set up the project on your local machine:
-
-### Step 1: Clone the Repository
+1. **Install dependencies**
 
 ```bash
-# Clone the repository
-git clone <your-repo-url>
-
-# Navigate to the project directory
-cd feedback-widget-next
-```
-
-### Step 2: Install Dependencies
-
-Choose your preferred package manager:
-
-```bash
-# Using npm
 npm install
-
-# Using yarn
+# or
 yarn install
-
-# Using pnpm
+# or
 pnpm install
-
-# Using bun
-bun install
 ```
 
-This will install all required dependencies listed in `package.json`.
+1. **Set up environment variables**
 
-### Step 3: Set Up Environment Variables
+See [Environment Variables](#-environment-variables) section for details.
 
-Create a `.env` file in the root directory:
-
-```bash
-# Copy the example file
-cp .env.example .env
-
-# Or create manually
-touch .env
-```
-
-See the [Environment Variables Setup](#-environment-variables-setup) section for detailed instructions on configuring your `.env` file.
-
-### Step 4: Set Up the Database
+1. **Set up the database**
 
 ```bash
 # Generate Prisma Client
 npx prisma generate
 
-# Push the schema to your database
+# (Optional) Push schema to database (for initial setup)
 npx prisma db push
 ```
 
-See the [Database Setup](#️-database-setup) section for more details.
-
-### Step 5: Run the Development Server
-
-```bash
-# Using npm
-npm run dev
-
-# Using yarn
-yarn dev
-
-# Using pnpm
-pnpm dev
-
-# Using bun
-bun dev
-```
-
-The application will be available at [http://localhost:3000](http://localhost:3000).
-
----
-
-## 🔐 Environment Variables Setup
-
-Environment variables are crucial for configuring your application. They keep sensitive information like database credentials out of your codebase.
-
-### Creating the `.env` File
-
-Create a `.env` file in the root directory of your project. This file should **never** be committed to Git (it's already in `.gitignore`).
-
-### Required Environment Variables
-
-#### `DATABASE_URL`
-
-This is the connection string for your MongoDB database.
-
-**Format for MongoDB Atlas (Cloud):**
-
-```env
-DATABASE_URL="mongodb+srv://<username>:<password>@<cluster-url>/<database-name>?retryWrites=true&w=majority"
-```
-
-**Getting Your MongoDB Atlas Connection String:**
-
-1. Sign up at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) (free tier available)
-2. Create a new cluster (choose free M0 tier)
-3. Create a database user:
-   - Go to "Database Access" → "Add New Database User"
-   - Choose "Password" authentication
-   - Save the username and password
-4. Whitelist your IP address:
-   - Go to "Network Access" → "Add IP Address"
-   - Add `0.0.0.0/0` for development (allows all IPs) or your specific IP
-5. Get your connection string:
-   - Go to "Database" → "Connect" → "Connect your application"
-   - Copy the connection string
-   - Replace `<password>` with your database user password
-   - Replace `<dbname>` with your database name (e.g., "feedback-widget")
-
-**Example `.env` file:**
-
-```env
-DATABASE_URL="mongodb+srv://myuser:mypassword123@cluster0.abc123.mongodb.net/feedback-widget?retryWrites=true&w=majority"
-```
-
-**Format for Local MongoDB:**
-
-```env
-DATABASE_URL="mongodb://localhost:27017/feedback-widget"
-```
-
-### Environment Variables for Production
-
-When deploying to production (e.g., Vercel), add environment variables in your hosting platform's dashboard:
-
-1. **Vercel**: Go to Project Settings → Environment Variables
-2. Add `DATABASE_URL` with your production database connection string
-3. Redeploy your application
-
-### Security Best Practices
-
-- ✅ Never commit `.env` files to Git
-- ✅ Use different databases for development and production
-- ✅ Rotate database passwords regularly
-- ✅ Use environment-specific `.env` files (`.env.development`, `.env.production`)
-- ✅ Restrict MongoDB network access in production
-
----
-
-## 🗄️ Database Setup
-
-This project uses Prisma ORM to interact with MongoDB. Prisma provides type-safe database access and automatic migrations.
-
-### Understanding the Schema
-
-The database schema is defined in `prisma/schema.prisma`:
-
-```prisma
-model Feedback {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String?
-  email     String?
-  message   String
-  rating    Int?
-  createdAt DateTime @default(now())
-}
-```
-
-**Field Descriptions:**
-
-- `id`: Unique identifier (MongoDB ObjectId)
-- `name`: User's name (optional)
-- `email`: User's email (optional)
-- `message`: Feedback message (required)
-- `rating`: Star rating 1-5 (optional)
-- `createdAt`: Timestamp when feedback was created (auto-set)
-
-### Setting Up Prisma
-
-1. **Generate Prisma Client:**
-
-```bash
-npx prisma generate
-```
-
-This command reads your schema and generates a type-safe Prisma Client that you can use in your application.
-
-1. **Push Schema to Database:**
-
-```bash
-npx prisma db push
-```
-
-This command creates/updates the database structure based on your schema. It's perfect for development and prototyping.
-
-**For Production:** Use `prisma migrate` for proper migrations:
-
-```bash
-npx prisma migrate dev --name init
-```
-
-### Verifying Database Connection
-
-You can verify your database connection using Prisma Studio:
-
-```bash
-npx prisma studio
-```
-
-This opens a visual database browser at [http://localhost:5555](http://localhost:5555) where you can view and manage your data.
-
-### Switching to PostgreSQL (Optional)
-
-If you prefer PostgreSQL over MongoDB:
-
-1. Update `prisma/schema.prisma`:
-
-```prisma
-datasource db {
-  provider = "postgresql"  // Changed from "mongodb"
-  url      = env("DATABASE_URL")
-}
-
-model Feedback {
-  id        String   @id @default(uuid())  // Changed from ObjectId
-  name      String?
-  email     String?
-  message   String
-  rating    Int?
-  createdAt DateTime @default(now())
-
-  @@map("feedbacks")  // Optional: custom table name
-}
-```
-
-1. Update your `.env` file with PostgreSQL connection string:
-
-```env
-DATABASE_URL="postgresql://user:password@localhost:5432/feedback-widget"
-```
-
-1. Regenerate and push:
-
-```bash
-npx prisma generate
-npx prisma db push
-```
-
----
-
-## ▶️ Running the Project
-
-### Development Mode
-
-Start the development server with hot module replacement:
-
-```bash
-npm run dev
-```
-
-**Features:**
-
-- Fast refresh (instant updates on file changes)
-- Turbopack bundler for faster builds
-- Error overlay in browser
-- Accessible at [http://localhost:3000](http://localhost:3000)
-
-### Production Build
-
-Build the project for production:
-
-```bash
-npm run build
-```
-
-This command:
-
-1. Generates Prisma Client
-2. Builds the Next.js application
-3. Builds the widget UMD bundle
-
-### Start Production Server
-
-Run the production build locally:
-
-```bash
-npm run build
-npm start
-```
-
-### Building Only the Widget
-
-Build just the widget bundle for embedding:
+1. **Build the widget**
 
 ```bash
 npm run build:widget
 ```
 
-This outputs `widget.umd.js` in the `public/` directory.
+1. **Start the development server**
+
+```bash
+npm run dev
+```
+
+1. **Open your browser**
+
+Visit [http://localhost:3000](http://localhost:3000) to see the homepage with the widget.
+
+Visit [http://localhost:3000/dashboard](http://localhost:3000/dashboard) to access the dashboard.
 
 ---
 
-## 🎓 Project Walkthrough
+## 🔐 Environment Variables
 
-This section provides a detailed walkthrough of how the application works.
+Create a `.env` file in the root directory with the following variables:
 
-### Application Flow
+### Required Variables
 
-1. **User Interaction:**
+```env
+# MongoDB Database Connection URL
+# Format for MongoDB Atlas (cloud):
+DATABASE_URL="mongodb+srv://<username>:<password>@<cluster-url>/<dbname>?retryWrites=true&w=majority&appName=<dbname>"
 
-   - User clicks the floating "Feedback" button (bottom-right corner)
-   - A popover opens with the feedback form
+# Format for local MongoDB:
+DATABASE_URL="mongodb://localhost:27017/feedback_widget_db"
 
-2. **Form Submission:**
-
-   - User fills in name, email, message, and selects a star rating
-   - User clicks "Submit"
-   - Form data is sent to `/api/feedback` via POST request
-
-3. **API Processing:**
-
-   - API route handler receives the request
-   - Validates the message field (required)
-   - Creates a new feedback entry in the database using Prisma
-   - Returns success response
-
-4. **UI Update:**
-   - Widget shows success message
-   - Form is hidden
-   - User can close the popover
-
-### Component Hierarchy
-
-```text
-RootLayout (layout.tsx)
-  └── Home Page (page.jsx)
-      └── Widget Component (Widget.jsx)
-          ├── Popover (Radix UI)
-          │   ├── PopoverTrigger (Button)
-          │   └── PopoverContent
-          │       ├── Form (conditional: if not submitted)
-          │       │   ├── Name Input
-          │       │   ├── Email Input
-          │       │   ├── Message Textarea
-          │       │   ├── Star Rating (5 StarIcon components)
-          │       │   └── Submit Button
-          │       └── Success Message (conditional: if submitted)
-          └── Separator
+# Format for MongoDB with authentication:
+DATABASE_URL="mongodb://<username>:<password>@<host>:<port>/<dbname>?authSource=<auth-db>"
 ```
 
-### State Management
+### Getting Your MongoDB Connection String
 
-The Widget component uses React hooks for state:
+#### Option 1: MongoDB Atlas (Cloud - Recommended)
 
-```javascript
-const [rating, setRating] = useState(3); // Current star rating
-const [submitted, setSubmitted] = useState(false); // Form submission status
-const [loading, setLoading] = useState(false); // API call loading state
-const [error, setError] = useState(""); // Error message
+1. Sign up at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
+2. Create a new cluster (free tier available)
+3. Create a database user (username and password)
+4. Whitelist your IP address (or use `0.0.0.0/0` for all IPs in development)
+5. Click "Connect" → "Connect your application"
+6. Copy the connection string
+7. Replace `<password>` with your database user password
+8. Replace `<dbname>` with your database name
+
+Example:
+
+```env
+DATABASE_URL="mongodb+srv://myuser:mypassword@cluster0.xxxxx.mongodb.net/feedback_widget_db?retryWrites=true&w=majority&appName=feedback_widget"
 ```
 
-### Data Flow
+#### Option 2: Local MongoDB
 
-```text
-User Input → Widget Component State → API Call → Database
-                                    ↓
-                              Success/Error → UI Update
+1. Install MongoDB locally ([Installation Guide](https://www.mongodb.com/docs/manual/installation/))
+2. Start MongoDB service
+3. Use the connection string:
+
+```env
+DATABASE_URL="mongodb://localhost:27017/feedback_widget_db"
 ```
 
----
+#### Option 3: Docker MongoDB
 
-## 📚 Components Documentation
-
-### Main Components
-
-#### Widget Component (`src/components/Widget.jsx`)
-
-The main feedback collection component.
-
-**Props:**
-
-- `apiBase` (string, optional): API endpoint URL (defaults to "/api/feedback")
-
-**Usage:**
-
-```jsx
-import Widget from "@/components/Widget";
-
-// With default API endpoint
-<Widget />
-
-// With custom API endpoint
-<Widget apiBase="https://api.example.com/feedback" />
+```bash
+docker run -d -p 27017:27017 --name mongodb mongo:latest
 ```
 
-**Features:**
+Then use:
 
-- Floating button that opens a popover
-- Form with name, email, message, and rating fields
-- Star rating system (1-5 stars)
-- Loading states during submission
-- Error handling and display
-- Success state after submission
-
-**Key Functions:**
-
-```javascript
-// Handle star rating selection
-const onSelectStar = (index) => {
-  setRating(index + 1);
-};
-
-// Handle form submission
-const submit = async (e) => {
-  e.preventDefault();
-  // ... submission logic
-};
+```env
+DATABASE_URL="mongodb://localhost:27017/feedback_widget_db"
 ```
 
-#### UI Components (`src/components/ui/`)
+### Example `.env` File
 
-Reusable UI components built with Radix UI and Tailwind CSS.
+See `.env.example` in the repository for a template:
 
-**Button Component:**
+```env
+# Environment variables for feedback-widget
+# Replace <username>, <password>, <cluster-url>, <dbname> with your MongoDB details
 
-```jsx
-import { Button } from "@/components/ui/button";
-
-<Button variant="default" size="default">Click me</Button>
-<Button variant="outline" size="sm">Outline</Button>
-<Button variant="ghost" size="lg">Ghost</Button>
-```
-
-**Variants:** `default`, `destructive`, `outline`, `secondary`, `ghost`, `link`  
-**Sizes:** `default`, `sm`, `lg`, `icon`
-
-**Input Component:**
-
-```jsx
-import { Input } from "@/components/ui/input";
-
-<Input type="email" placeholder="Enter email" id="email" />;
-```
-
-**Textarea Component:**
-
-```jsx
-import { Textarea } from "@/components/ui/textarea";
-
-<Textarea
-  placeholder="Enter message"
-  id="feedback"
-  className="min-h-[100px]"
-/>;
-```
-
-**Label Component:**
-
-```jsx
-import { Label } from "@/components/ui/label";
-
-<Label htmlFor="email">Email Address</Label>;
-```
-
-**Popover Component:**
-
-```jsx
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
-
-<Popover>
-  <PopoverTrigger asChild>
-    <Button>Open</Button>
-  </PopoverTrigger>
-  <PopoverContent>
-    <p>Content goes here</p>
-  </PopoverContent>
-</Popover>;
-```
-
-**Separator Component:**
-
-```jsx
-import { Separator } from "@/components/ui/separator";
-
-<Separator className="my-4" />;
+DATABASE_URL="mongodb+srv://<username>:<password>@<cluster-url>/<dbname>?retryWrites=true&w=majority&appName=<dbname>"
 ```
 
 ---
 
-## 🔌 API Routes & Endpoints
+## 📁 Project Structure
 
-The API routes are located in `src/app/api/feedback/route.js`. This file uses Next.js App Router's route handlers.
-
-### Base URL
-
-- Development: `http://localhost:3000/api/feedback`
-- Production: `https://embedded-feedback.vercel.app/api/feedback`
-
-### Endpoints
-
-#### POST `/api/feedback`
-
-Creates a new feedback entry.
-
-**Request:**
-
-```javascript
-fetch("/api/feedback", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    name: "John Doe",
-    email: "john@example.com",
-    message: "Great product!",
-    rating: 5,
-  }),
-});
+```bash
+feedback-widget/
+├── prisma/
+│   └── schema.prisma          # Database schema definition
+├── public/
+│   ├── widget.umd.js          # Built widget bundle (generated)
+│   ├── widget-styles.css      # Widget CSS (generated)
+│   └── test-widget.html       # Example HTML for testing widget
+├── scripts/
+│   ├── build-widget-css.js    # CSS build script
+│   ├── inject-css-inline.js   # CSS injection script
+│   └── migrate-to-projects.ts # Migration script
+├── src/
+│   ├── app/                   # Next.js App Router pages
+│   │   ├── api/               # API routes
+│   │   │   ├── feedback/
+│   │   │   │   └── route.ts   # Feedback CRUD API
+│   │   │   ├── projects/
+│   │   │   │   ├── route.ts   # Projects list/create API
+│   │   │   │   └── [id]/
+│   │   │   │       └── route.ts # Project update/delete API
+│   │   │   └── business-insights/
+│   │   │       └── route.ts   # Analytics API
+│   │   ├── dashboard/         # Dashboard pages
+│   │   │   ├── page.tsx       # Overview dashboard
+│   │   │   ├── feedback/
+│   │   │   │   ├── page.tsx   # Feedback list page
+│   │   │   │   └── [id]/
+│   │   │   │       └── page.tsx # Feedback detail page
+│   │   │   ├── projects/
+│   │   │   │   ├── page.tsx   # Projects list page
+│   │   │   │   ├── new/
+│   │   │   │   │   └── page.tsx # Create project page
+│   │   │   │   └── [id]/
+│   │   │   │       └── page.tsx # Edit project page
+│   │   │   └── business-insights/
+│   │   │       └── page.tsx   # Analytics page
+│   │   ├── layout.tsx         # Root layout
+│   │   └── page.tsx           # Homepage
+│   ├── components/
+│   │   ├── Widget.tsx         # Main feedback widget component
+│   │   ├── dashboard/         # Dashboard components
+│   │   │   ├── dashboard-layout.tsx
+│   │   │   ├── sidebar.tsx
+│   │   │   ├── header.tsx
+│   │   │   ├── stat-card.tsx
+│   │   │   ├── feedback-table.tsx
+│   │   │   ├── feedback-table-filters.tsx
+│   │   │   ├── project-form.tsx
+│   │   │   └── chart-container.tsx
+│   │   ├── ui/                # shadcn/ui components
+│   │   │   ├── button.tsx
+│   │   │   ├── card.tsx
+│   │   │   ├── input.tsx
+│   │   │   ├── textarea.tsx
+│   │   │   ├── table.tsx
+│   │   │   ├── dialog.tsx
+│   │   │   ├── alert-dialog.tsx
+│   │   │   ├── dropdown-menu.tsx
+│   │   │   └── ...
+│   │   └── providers/
+│   │       ├── query-provider.tsx
+│   │       └── theme-provider.tsx
+│   ├── hooks/                 # Custom React hooks
+│   │   ├── use-feedback.ts    # Feedback data fetching
+│   │   ├── use-projects.ts    # Projects data fetching
+│   │   └── use-analytics.ts   # Analytics data fetching
+│   ├── lib/                   # Utility functions
+│   │   ├── prisma.ts          # Prisma client singleton
+│   │   ├── api-utils.ts       # API helper functions
+│   │   ├── export-utils.ts    # CSV export utilities
+│   │   ├── query-client.ts    # React Query client
+│   │   └── utils.ts           # General utilities
+│   ├── types/
+│   │   └── index.ts           # TypeScript type definitions
+│   ├── web-component.tsx      # Web Component wrapper
+│   ├── widget-styles.ts       # Widget styles export
+│   └── globals.css            # Global styles
+├── .env.example               # Environment variables template
+├── next.config.ts             # Next.js configuration
+├── tailwind.config.js         # Tailwind CSS configuration
+├── vite.config.widget.js      # Vite config for widget build
+├── package.json               # Dependencies and scripts
+└── README.md                  # This file
 ```
+
+---
+
+## 🔌 API Endpoints
+
+### Feedback API
+
+#### `POST /api/feedback`
+
+Create a new feedback entry.
+
+**Headers:**
+
+- `Content-Type: application/json`
+- `X-API-Key: <your-api-key>` (optional, for project association)
 
 **Request Body:**
 
-- `name` (string, optional): User's name
-- `email` (string, optional): User's email
-- `message` (string, required): Feedback message
-- `rating` (number, optional): Star rating (1-5)
+```json
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "message": "Great product!",
+  "rating": 5
+}
+```
 
-**Response (Success - 201):**
+**Response:** `201 Created`
 
 ```json
 {
-  "id": "507f1f77bcf86cd799439011",
+  "id": "...",
   "name": "John Doe",
   "email": "john@example.com",
   "message": "Great product!",
   "rating": 5,
-  "createdAt": "2025-01-15T10:30:00.000Z"
+  "projectId": "...",
+  "createdAt": "2024-01-01T00:00:00.000Z"
 }
 ```
 
-**Response (Error - 400):**
+#### `GET /api/feedback`
 
-```json
-{
-  "error": "Message is required"
-}
-```
+Get all feedback entries (optionally filtered by project).
 
-**Response (Error - 500):**
+**Query Parameters:**
 
-```json
-{
-  "error": "Failed to save feedback"
-}
-```
+- `projectId` (optional): Filter by project ID
 
-#### GET `/api/feedback`
-
-Retrieves all feedback entries, ordered by creation date (newest first).
-
-**Request:**
-
-```javascript
-fetch("/api/feedback")
-  .then((res) => res.json())
-  .then((data) => console.log(data));
-```
-
-**Response (Success - 200):**
+**Response:** `200 OK`
 
 ```json
 [
   {
-    "id": "507f1f77bcf86cd799439011",
+    "id": "...",
     "name": "John Doe",
     "email": "john@example.com",
     "message": "Great product!",
     "rating": 5,
-    "createdAt": "2025-01-15T10:30:00.000Z"
-  },
-  {
-    "id": "507f1f77bcf86cd799439012",
-    "name": "Jane Smith",
-    "email": "jane@example.com",
-    "message": "Love it!",
-    "rating": 4,
-    "createdAt": "2025-01-14T15:20:00.000Z"
+    "projectId": "...",
+    "project": {
+      "id": "...",
+      "name": "My Project",
+      "domain": "https://example.com"
+    },
+    "createdAt": "2024-01-01T00:00:00.000Z"
   }
 ]
 ```
 
-#### OPTIONS `/api/feedback`
+### Projects API
 
-Handles CORS preflight requests. This is automatically called by browsers before cross-origin requests.
+#### `GET /api/projects`
 
-**Response (204):**
+Get all projects.
 
-No content, just CORS headers.
+**Response:** `200 OK`
 
-### CORS Configuration
-
-The API includes CORS headers to allow cross-origin requests:
-
-```javascript
-Access-Control-Allow-Origin: *
-Access-Control-Allow-Methods: GET, POST, OPTIONS
-Access-Control-Allow-Headers: Content-Type
+```json
+[
+  {
+    "id": "...",
+    "name": "My Project",
+    "domain": "https://example.com",
+    "apiKey": "...",
+    "description": "Project description",
+    "isActive": true,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z",
+    "_count": {
+      "feedbacks": 10
+    }
+  }
+]
 ```
 
-This allows the widget to be embedded on different domains.
+#### `POST /api/projects`
+
+Create a new project.
+
+**Request Body:**
+
+```json
+{
+  "name": "My Project",
+  "domain": "https://example.com",
+  "description": "Project description"
+}
+```
+
+**Response:** `201 Created`
+
+```json
+{
+  "id": "...",
+  "name": "My Project",
+  "domain": "https://example.com",
+  "apiKey": "generated-api-key",
+  "description": "Project description",
+  "isActive": true,
+  "createdAt": "2024-01-01T00:00:00.000Z",
+  "updatedAt": "2024-01-01T00:00:00.000Z"
+}
+```
+
+#### `GET /api/projects/[id]`
+
+Get a specific project by ID.
+
+#### `PUT /api/projects/[id]`
+
+Update a project.
+
+**Request Body:**
+
+```json
+{
+  "name": "Updated Name",
+  "domain": "https://updated.com",
+  "description": "Updated description",
+  "isActive": true,
+  "regenerateApiKey": false
+}
+```
+
+#### `DELETE /api/projects/[id]`
+
+Delete a project.
+
+### Business Insights API
+
+#### `GET /api/business-insights`
+
+Get analytics data.
+
+**Query Parameters:**
+
+- `projectId` (optional): Filter by project ID
+
+**Response:** `200 OK`
+
+```json
+{
+  "totalFeedback": 100,
+  "averageRating": 4.5,
+  "ratedFeedbackCount": 80,
+  "ratingDistribution": [
+    { "rating": 1, "count": 5 },
+    { "rating": 2, "count": 10 },
+    { "rating": 3, "count": 15 },
+    { "rating": 4, "count": 30 },
+    { "rating": 5, "count": 40 }
+  ],
+  "feedbackByProject": [
+    {
+      "projectId": "...",
+      "projectName": "My Project",
+      "count": 50
+    }
+  ],
+  "recent7Days": 20,
+  "recent30Days": 60,
+  "totalProjects": 5
+}
+```
 
 ---
 
-## 🔗 Widget Integration Guide
+## 🔧 Widget Integration Guide
 
-The widget can be embedded in any HTML page, even outside of React applications, using the Web Component approach.
+### Basic Integration
 
-### Method 1: Web Component (Recommended)
-
-Build the widget bundle and embed it as a custom HTML element.
-
-#### Step 1: Build the Widget
-
-```bash
-npm run build:widget
-```
-
-This creates `public/widget.umd.js`.
-
-#### Step 2: Embed in HTML
-
-Add the following to any HTML page:
+Add the widget to any HTML page with just a few lines:
 
 ```html
 <!DOCTYPE html>
@@ -880,496 +528,486 @@ Add the following to any HTML page:
   <body>
     <h1>Welcome to My Website</h1>
 
-    <!-- Load React and ReactDOM (required for the widget) -->
+    <!-- Load React and ReactDOM UMD builds (required for widget) -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
-    <!-- Load the widget bundle -->
+    <!-- Load the widget script from your deployment -->
     <script src="https://embedded-feedback.vercel.app/widget.umd.js"></script>
 
-    <!-- Use the widget as a custom HTML element -->
+    <!-- Embed the widget -->
     <my-widget
       api-base="https://embedded-feedback.vercel.app/api/feedback"
+      api-key="your-api-key-here"
     ></my-widget>
-
-    <!-- Your other content -->
   </body>
 </html>
 ```
 
-#### Customization
+### Integration with Project API Key
 
-You can customize the API endpoint:
+1. **Create a project** in the dashboard at `/dashboard/projects/new`
+2. **Copy the API key** from the project details
+3. **Use the API key** in the `api-key` attribute:
 
 ```html
-<my-widget api-base="https://your-api.com/feedback"></my-widget>
+<my-widget
+  api-base="https://embedded-feedback.vercel.app/api/feedback"
+  api-key="1e61d9ba70b084b5f8291f2aa75e67d9"
+></my-widget>
 ```
 
-### Method 2: React Component (Within React Apps)
+### Integration in React/Vue/Angular
 
-If you're building a React application, you can import the component directly:
+The widget works in any framework! Just include the script tags and use the `<my-widget>` tag:
+
+**React Example:**
 
 ```jsx
-import Widget from "@/components/Widget";
-
-function MyPage() {
+function App() {
   return (
     <div>
       <h1>My React App</h1>
-      <Widget apiBase="/api/feedback" />
+      <my-widget
+        api-base="https://embedded-feedback.vercel.app/api/feedback"
+        api-key="your-api-key"
+      />
     </div>
   );
 }
 ```
 
-### Method 3: iframe Embedding
+**Vue Example:**
 
-You can also embed the entire page in an iframe:
+```vue
+<template>
+  <div>
+    <h1>My Vue App</h1>
+    <my-widget
+      api-base="https://embedded-feedback.vercel.app/api/feedback"
+      api-key="your-api-key"
+    />
+  </div>
+</template>
+```
+
+### Local Development
+
+For local development, use:
 
 ```html
-<iframe
-  src="https://embedded-feedback.vercel.app/"
-  width="400"
-  height="600"
-  frameborder="0"
-></iframe>
+<my-widget
+  api-base="http://localhost:3000/api/feedback"
+  api-key="your-api-key"
+></my-widget>
 ```
 
-### Styling Considerations
+### Widget Attributes
 
-- The widget uses Shadow DOM, so its styles are isolated
-- The widget is positioned fixed in the bottom-right corner
-- You can override positioning with CSS:
-
-```css
-my-widget {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 9999;
-}
-```
+- `api-base` (required): The API endpoint URL for submitting feedback
+- `api-key` (optional): API key for project association (if not provided, uses default project)
 
 ---
 
-## 🔄 Reusing Components in Other Projects
+## 📊 Dashboard Overview
 
-All components in this project are designed to be reusable. Here's how to use them in other projects:
+### Accessing the Dashboard
 
-### Copying UI Components
+After deploying or running locally, access the dashboard at:
 
-The UI components in `src/components/ui/` are framework-agnostic React components that can be used anywhere.
+- **Production:** [https://embedded-feedback.vercel.app/dashboard](https://embedded-feedback.vercel.app/dashboard)
+- **Local:** [http://localhost:3000/dashboard](http://localhost:3000/dashboard)
 
-#### Step 1: Copy Component Files
+### Dashboard Pages
 
-Copy the component file(s) you need to your project:
+#### 1. Overview (`/dashboard`)
 
-```bash
-# Example: Copy Button component
-cp src/components/ui/button.jsx your-project/src/components/ui/
-cp src/lib/utils.ts your-project/src/lib/  # Required dependency
+- Total feedback count
+- Active projects count
+- Average rating
+- Recent feedback (last 7 days)
+- Additional statistics (last 30 days, high ratings, satisfaction rate)
+- Quick action cards
+
+#### 2. Feedback (`/dashboard/feedback`)
+
+- Table view of all feedback entries
+- Filter by project and rating
+- Search functionality
+- Sort by date, rating, project
+- Pagination
+- CSV export
+- Column visibility toggle
+- Detail view for each feedback entry
+
+#### 3. Projects (`/dashboard/projects`)
+
+- List of all projects
+- Create new project
+- Edit project details
+- Delete project
+- View API keys
+- Copy API keys
+- Project status (active/inactive)
+- Feedback count per project
+
+#### 4. Business Insights (`/dashboard/business-insights`)
+
+- Rating distribution charts (Bar and Area)
+- Feedback by project (Pie and Bar charts)
+- Time-based statistics
+- Interactive tooltips
+- Responsive charts with horizontal scrolling on mobile
+
+---
+
+## 🧩 Components & Reusability
+
+### Widget Component
+
+**Location:** `src/components/Widget.tsx`
+
+The main feedback widget component that can be used directly in React applications.
+
+```tsx
+import Widget from "@/components/Widget";
+
+function MyPage() {
+  return (
+    <Widget
+      apiBase="https://embedded-feedback.vercel.app/api/feedback"
+      apiKey="your-api-key"
+    />
+  );
+}
 ```
 
-#### Step 1: Install Dependencies
+**Props:**
 
-Install required dependencies:
+- `apiBase?: string` - API endpoint URL (default: "/api/feedback")
+- `apiKey?: string` - API key for project association
 
-```bash
-npm install @radix-ui/react-slot class-variance-authority clsx tailwind-merge
+### Dashboard Components
+
+#### StatCard
+
+**Location:** `src/components/dashboard/stat-card.tsx`
+
+Displays a statistic with icon, value, description, and optional loading state.
+
+```tsx
+import { StatCard } from "@/components/dashboard/stat-card";
+import { MessageSquare } from "lucide-react";
+
+<StatCard
+  title="Total Feedback"
+  value={100}
+  description="All time feedback submissions"
+  icon={MessageSquare}
+  isLoading={false}
+  colorVariant="sky"
+/>;
 ```
 
-#### Step 2: Import and Use
+#### FeedbackTable
 
-```jsx
-import { Button } from "./components/ui/button";
+**Location:** `src/components/dashboard/feedback-table.tsx`
+
+Complete feedback table with filtering, sorting, pagination, and export.
+
+```tsx
+import { FeedbackTable } from "@/components/dashboard/feedback-table";
+
+<FeedbackTable
+  data={feedbackData}
+  isLoading={false}
+  projects={projectsData}
+  onProjectFilter={(projectId) => {}}
+  onRatingFilter={(rating) => {}}
+/>;
+```
+
+#### ProjectForm
+
+**Location:** `src/components/dashboard/project-form.tsx`
+
+Form component for creating/editing projects with validation.
+
+```tsx
+import { ProjectForm } from "@/components/dashboard/project-form";
+
+<ProjectForm
+  defaultValues={projectData}
+  onSubmit={handleSubmit}
+  onCancel={handleCancel}
+/>;
+```
+
+### UI Components
+
+All UI components are from shadcn/ui and can be imported and used directly:
+
+```tsx
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+```
+
+### Custom Hooks
+
+#### useFeedback
+
+**Location:** `src/hooks/use-feedback.ts`
+
+React Query hook for fetching feedback data.
+
+```tsx
+import { useFeedback } from "@/hooks/use-feedback";
 
 function MyComponent() {
-  return <Button variant="default">Click me</Button>;
+  const { data, isLoading, error } = useFeedback(projectId);
+  // ...
 }
 ```
 
-### Copying the Widget Component
+#### useProjects
 
-To reuse the entire widget:
+**Location:** `src/hooks/use-projects.ts`
 
-1. Copy `src/components/Widget.jsx` to your project
-2. Copy required UI components (`button`, `input`, `textarea`, `label`, `popover`, `separator`)
-3. Install all dependencies from `package.json`
-4. Adjust import paths as needed
+React Query hooks for project management.
 
-### Creating a Component Library
+```tsx
+import {
+  useProjects,
+  useCreateProject,
+  useUpdateProject,
+} from "@/hooks/use-projects";
 
-You can extract these components into a separate npm package:
+function MyComponent() {
+  const { data: projects } = useProjects();
+  const createProject = useCreateProject();
 
-1. Create a new repository for your component library
-1. Copy components and configure build tools
-1. Publish to npm:
-
-```bash
-npm publish
+  const handleCreate = async () => {
+    await createProject.mutateAsync({
+      name: "New Project",
+      domain: "https://example.com",
+      description: "Description",
+    });
+  };
+}
 ```
 
-1. Install in other projects:
+#### useAnalytics
 
-```bash
-npm install your-component-library
+**Location:** `src/hooks/use-analytics.ts`
+
+React Query hook for fetching analytics data.
+
+```tsx
+import { useAnalytics } from "@/hooks/use-analytics";
+
+function MyComponent() {
+  const { data: analytics, isLoading } = useAnalytics(projectId);
+  // ...
+}
 ```
 
 ---
 
-## 🛠️ Development & Customization
+## 🗄️ Database Schema
 
-### Adding New UI Components
+### Project Model
 
-To add new UI components using shadcn/ui:
-
-```bash
-npx shadcn-ui@latest add [component-name]
+```prisma
+model Project {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  domain      String
+  apiKey      String     @unique
+  description String?
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  feedbacks   Feedback[]
+}
 ```
 
-Example:
-
-```bash
-npx shadcn-ui@latest add dialog
-npx shadcn-ui@latest add toast
-```
-
-### Customizing Tailwind CSS
-
-Edit `tailwind.config.js` to customize your theme:
-
-```javascript
-module.exports = {
-  theme: {
-    extend: {
-      colors: {
-        // Add custom colors
-        brand: {
-          primary: "#your-color",
-          secondary: "#your-color",
-        },
-      },
-      borderRadius: {
-        // Add custom border radius
-        custom: "12px",
-      },
-    },
-  },
-};
-```
-
-### Modifying the Database Schema
-
-1. Edit `prisma/schema.prisma`:
+### Feedback Model
 
 ```prisma
 model Feedback {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  projectId String?   @db.ObjectId
+  project   Project?  @relation(fields: [projectId], references: [id])
   name      String?
   email     String?
   message   String
   rating    Int?
-  category  String?  // New field
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt  // New field
+  metadata  Json?
+  createdAt DateTime  @default(now())
+
+  @@index([projectId])
+  @@index([createdAt])
 }
 ```
 
-1. Push changes:
+### Schema Modifications
 
-```bash
-npx prisma generate
-npx prisma db push
-```
+To modify the schema:
 
-### Adding Form Validation
-
-You can add client-side validation to the Widget component:
-
-```javascript
-const submit = async (e) => {
-  e.preventDefault();
-
-  // Validation
-  if (!message.trim()) {
-    setError("Message is required");
-    return;
-  }
-
-  if (email && !/\S+@\S+\.\S+/.test(email)) {
-    setError("Please enter a valid email");
-    return;
-  }
-
-  // ... rest of submission logic
-};
-```
-
-### Adding New API Endpoints
-
-Create a new route file in `src/app/api/`:
-
-```javascript
-// src/app/api/feedback/[id]/route.js
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-
-export async function GET(request, { params }) {
-  const { id } = params;
-
-  try {
-    const feedback = await prisma.feedback.findUnique({
-      where: { id },
-    });
-
-    if (!feedback) {
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
-    }
-
-    return NextResponse.json(feedback);
-  } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch" }, { status: 500 });
-  }
-}
-```
+1. Edit `prisma/schema.prisma`
+2. Run `npx prisma generate` to regenerate Prisma Client
+3. Run `npx prisma db push` to sync schema with database (development)
+4. Or create a migration: `npx prisma migrate dev --name your-migration-name`
 
 ---
 
-## 📦 Building for Production
-
-### Next.js Build
-
-Build the entire Next.js application:
+## 📜 Development Scripts
 
 ```bash
+# Start development server
+npm run dev
+
+# Build for production
 npm run build
-```
 
-This creates an optimized production build in the `.next` directory.
+# Start production server
+npm start
 
-### Widget Bundle Build
+# Lint code
+npm run lint
 
-Build just the widget for embedding:
-
-```bash
+# Build widget only
 npm run build:widget
+
+# Build widget CSS only
+npm run build:widget-css
+
+# Generate Prisma Client
+npx prisma generate
+
+# Push schema to database (development)
+npx prisma db push
+
+# Create migration
+npx prisma migrate dev
+
+# Open Prisma Studio (database GUI)
+npx prisma studio
 ```
-
-This creates `public/widget.umd.js` using Vite.
-
-### Build Process Explained
-
-The build script (`npm run build`) does three things:
-
-1. **Generates Prisma Client**: Creates type-safe database client
-2. **Builds Next.js App**: Compiles and optimizes the Next.js application
-3. **Builds Widget Bundle**: Creates UMD bundle for embedding
 
 ---
 
 ## 🚀 Deployment
 
-### Deploying to Vercel (Recommended)
+### Deploy to Vercel (Recommended)
 
-Vercel is the recommended platform for Next.js applications.
+1. **Push your code to GitHub**
 
-#### Step 1: Push to GitHub
+2. **Import project in Vercel**
 
-```bash
-git add .
-git commit -m "Ready for deployment"
-git push origin main
-```
+   - Go to [vercel.com](https://vercel.com)
+   - Click "Import Project"
+   - Select your repository
 
-#### Step 2: Import to Vercel
+3. **Configure environment variables**
 
-1. Go to [vercel.com](https://vercel.com)
-2. Click "Import Project"
-3. Select your GitHub repository
-4. Configure environment variables:
-   - Add `DATABASE_URL` with your production database connection string
-5. Click "Deploy"
+   - Add `DATABASE_URL` in Vercel project settings
+   - Environment → Add New → `DATABASE_URL`
 
-#### Step 3: Update Widget Embedding
+4. **Deploy**
 
-Update the widget embedding URLs to use your Vercel deployment:
+   - Vercel will automatically build and deploy
+   - The widget bundle will be generated during build
 
-```html
-<script src="https://your-app.vercel.app/widget.umd.js"></script>
-<my-widget api-base="https://your-app.vercel.app/api/feedback"></my-widget>
-```
+5. **Update widget URLs**
+   - After deployment, update widget script URLs to your Vercel domain
+   - Example: `https://your-project.vercel.app/widget.umd.js`
 
-### Deploying to Other Platforms
+### Build Process
 
-#### Netlify
+The build process includes:
 
-1. Connect your GitHub repository
-2. Build command: `npm run build`
-3. Publish directory: `.next`
-4. Add environment variables in Netlify dashboard
+1. **Prisma Client Generation**: `npx prisma generate`
+2. **Next.js Build**: `next build`
+3. **Widget Build**: Builds the widget bundle with Vite
 
-#### Railway
-
-1. Connect your GitHub repository
-2. Add environment variables
-3. Railway automatically detects Next.js and deploys
-
-#### Docker Deployment
-
-Create a `Dockerfile`:
-
-```dockerfile
-FROM node:18-alpine
-
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm ci
-
-COPY . .
-RUN npm run build
-
-EXPOSE 3000
-
-CMD ["npm", "start"]
-```
-
-Build and run:
-
-```bash
-docker build -t feedback-widget .
-docker run -p 3000:3000 -e DATABASE_URL="your-db-url" feedback-widget
-```
+The widget bundle (`widget.umd.js`) and styles (`widget-styles.css`) are output to the `public/` directory and served as static files.
 
 ---
 
 ## 🏷️ Keywords & Topics
 
-This project covers and demonstrates the following concepts and technologies:
-
-**Frontend:**
-
-- React, React Hooks, Functional Components, Client Components, Server Components
-- Next.js, App Router, API Routes, Server-Side Rendering
-- Tailwind CSS, Utility-First CSS, Responsive Design
-- Web Components, Custom Elements, Shadow DOM
-- TypeScript, JavaScript ES6+, Modern JavaScript
-
-**Backend:**
-
-- RESTful API, HTTP Methods, API Routes
-- CORS, Cross-Origin Resource Sharing
-- Serverless Functions, Edge Functions
-
-**Database:**
-
-- MongoDB, NoSQL, Document Database
-- Prisma ORM, Database Migrations, Type-Safe Database Access
-- Database Schema Design, Data Modeling
-
-**UI/UX:**
-
-- Radix UI, Accessible Components, ARIA Attributes
-- Form Handling, Input Validation, User Feedback
-- Loading States, Error Handling, Success States
-
-**Build Tools:**
-
-- Vite, Module Bundling, UMD Format
-- Turbopack, Fast Refresh, Hot Module Replacement
-- PostCSS, CSS Processing
-
-**Development:**
-
-- Git, Version Control
-- ESLint, Code Quality
-- Environment Variables, Configuration Management
-- Component Reusability, Modular Architecture
-
-**Deployment:**
-
-- Vercel, Serverless Deployment
-- Production Builds, Performance Optimization
-
-**Keywords:**
-feedback-widget, reactjs, nextjs, feedback-form, mongodb, prisma, tailwindcss, widget-embedding, web-components, reusable-components, fullstack, typescript, api-integration, vercel, modern-web, component-library, teaching-resource, educational-project, real-world-example
+feedback widget, embedded feedback, web component, shadow dom, nextjs, react, typescript, prisma, mongodb, dashboard, analytics, api, vercel, tailwindcss, shadcn ui, react query, tanstack table, recharts, feedback collection, customer feedback, user feedback, feedback management, project management, api key authentication, cors, cross-origin, embeddable widget, feedback form, star rating, csv export, business insights, data visualization, responsive design, dark mode, fullstack, full-stack, teaching, learning, example project, production-ready, modern web development
 
 ---
 
-## 📖 Learn More
+## 🎓 Learning Resources
 
-### Official Documentation
+This project demonstrates:
 
-- [Next.js Documentation](https://nextjs.org/docs) - Comprehensive Next.js guide
-- [React Documentation](https://react.dev) - Official React documentation
-- [Prisma Documentation](https://www.prisma.io/docs/) - Prisma ORM guide
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs) - Tailwind CSS reference
-- [Radix UI Documentation](https://www.radix-ui.com/docs) - Radix UI components
-- [Vercel Documentation](https://vercel.com/docs) - Vercel deployment guide
-
-### Learning Resources
-
-- [Next.js Learn Course](https://nextjs.org/learn) - Interactive Next.js tutorial
-- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/) - Testing React components
-- [Web Components Guide](https://developer.mozilla.org/en-US/docs/Web/Web_Components) - MDN Web Components documentation
-- [MongoDB University](https://university.mongodb.com/) - Free MongoDB courses
-
-### Related Projects
-
-- [Next.js Examples](https://github.com/vercel/next.js/tree/canary/examples) - Official Next.js examples
-- [shadcn/ui](https://ui.shadcn.com/) - Re-usable components built with Radix UI and Tailwind CSS
+- **Web Components**: Creating custom HTML elements with Shadow DOM
+- **Next.js App Router**: Modern Next.js routing and API routes
+- **React Patterns**: Custom hooks, component composition, state management
+- **TypeScript**: Type-safe development with interfaces and types
+- **Prisma ORM**: Type-safe database queries and schema management
+- **API Design**: RESTful APIs with CORS support
+- **Dashboard Development**: Building admin interfaces with tables, charts, and filters
+- **Responsive Design**: Mobile-first approach with Tailwind CSS
+- **Build Optimization**: Separate widget bundle for performance
+- **Modern Tooling**: Vite, Turbopack, and modern build pipelines
 
 ---
 
-## 👨‍💻 About
+## 💡 Tips & Best Practices
 
-**Author:** Arnob Mahmud  
-**Portfolio:** [https://arnob-mahmud.vercel.app/](https://arnob-mahmud.vercel.app/)
+1. **API Key Security**: Keep your API keys secret. Never commit them to version control.
 
-This project is designed as a comprehensive teaching and demonstration tool for modern web development workflows. It showcases:
+2. **CORS Configuration**: The API allows all origins (`*`) for widget embedding. For production, consider restricting to specific domains.
 
-- **Best Practices**: Industry-standard patterns and conventions
-- **Modern Stack**: Latest versions of popular frameworks and tools
-- **Real-World Patterns**: Practical solutions to common problems
-- **Educational Focus**: Extensive comments and documentation for learning
+3. **Database Indexes**: The schema includes indexes on `projectId` and `createdAt` for optimal query performance.
 
-### Use Cases
+4. **Widget Bundle Size**: The widget is built separately to minimize bundle size. Keep widget dependencies minimal.
 
-- **Learning**: Understand modern React and Next.js patterns
-- **Reference**: Use as a reference for similar projects
-- **Starting Point**: Fork and customize for your own needs
-- **Production**: Deploy and use in real applications
+5. **Error Handling**: All API routes include error handling. Check browser console and server logs for debugging.
 
-### Contributing
-
-Contributions, issues, and feature requests are welcome! Feel free to:
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
+6. **Environment Variables**: Use `.env.local` for local development (git-ignored) and `.env.example` for documentation.
 
 ---
 
-## 🎯 Conclusion
+## 🐛 Troubleshooting
 
-This **Embedded Feedback Widget** project demonstrates a complete, production-ready full-stack application built with modern web technologies. It showcases:
+### Widget not appearing
 
-✅ **Component Reusability** - Modular, reusable components that can be used across projects  
-✅ **Modern Architecture** - Next.js App Router, React Server Components, API Routes  
-✅ **Type Safety** - TypeScript and Prisma for type-safe code  
-✅ **Best Practices** - Proper error handling, loading states, and user feedback  
-✅ **Accessibility** - WCAG-compliant components with keyboard navigation  
-✅ **Production Ready** - Optimized builds, CORS support, and deployment configurations  
-✅ **Educational Value** - Comprehensive comments and documentation for learning
+- Check browser console for errors
+- Ensure React and ReactDOM scripts are loaded before widget script
+- Verify the widget script URL is correct
+- Check CORS headers in network tab
 
-Whether you're learning modern web development, building a feedback system for your application, or creating reusable components, this project provides a solid foundation to build upon.
+### Database connection errors
 
-The codebase is well-structured, thoroughly commented, and follows industry best practices, making it an excellent resource for developers at all levels.
+- Verify `DATABASE_URL` is correct
+- Check MongoDB connection (Atlas IP whitelist, credentials)
+- Ensure Prisma Client is generated: `npx prisma generate`
+- Try connecting with MongoDB Compass to test connection
+
+### Build errors
+
+- Clear `.next` directory: `rm -rf .next`
+- Clear `node_modules`: `rm -rf node_modules && npm install`
+- Regenerate Prisma Client: `npx prisma generate`
+- Check Node.js version (requires 18+)
 
 ---
 
-## Happy Coding! 🎉
+## 📝 License
+
+This project is open source and available for learning and educational purposes.
+
+---
+
+## Happy Coding
 
 Feel free to use this project repository and extend this project further!
 

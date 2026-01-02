@@ -15,7 +15,7 @@ import { useProject, useUpdateProject } from "@/hooks/use-projects";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Copy, RefreshCw } from "lucide-react";
+import { Copy, RefreshCw, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import type { UpdateProjectInput } from "@/types";
 import { useState } from "react";
@@ -38,15 +38,20 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   const { data: project, isLoading } = useProject(id);
   const updateProject = useUpdateProject();
   const [showApiKey, setShowApiKey] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const handleSubmit = async (data: UpdateProjectInput) => {
-    await updateProject.mutateAsync({ id, data });
+    const updatedProject = await updateProject.mutateAsync({ id, data });
+    toast.success(`Project "${updatedProject.name}" updated successfully`);
+    router.push("/dashboard/projects");
   };
 
   const handleCopyApiKey = async () => {
     if (project?.apiKey) {
       try {
         await navigator.clipboard.writeText(project.apiKey);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000); // Show checkmark for 2 seconds
         toast.success("API key copied to clipboard");
       } catch {
         toast.error("Failed to copy API key");
@@ -123,7 +128,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
       <div className="max-w-7xl mx-auto space-y-4">
         {/* API Key Card */}
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-4 sm:pt-6">
             <div className="space-y-4">
               <div>
                 <h3 className="text-sm font-medium mb-2 text-white">API Key</h3>
@@ -131,24 +136,32 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
                   Use this API key to authenticate feedback submissions from
                   your project.
                 </p>
-                <div className="flex items-center gap-2">
-                  <code className="flex-1 px-3 py-2 border border-white/10 bg-gradient-to-r from-white/5 via-white/5 to-white/5 backdrop-blur-sm rounded-xl text-sm font-mono text-white shadow-lg">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                  <code className="w-full sm:flex-1 px-3 py-2 border border-white/10 bg-gradient-to-r from-white/5 via-white/5 to-white/5 backdrop-blur-sm rounded-xl text-sm font-mono text-white shadow-lg break-all">
                     {showApiKey ? project.apiKey : maskedApiKey}
                   </code>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setShowApiKey(!showApiKey)}
-                  >
-                    {showApiKey ? "Hide" : "Show"}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleCopyApiKey}
-                  >
-                    <Copy className="h-4 w-4" />
-                  </Button>
+                  <div className="flex items-center gap-2 sm:flex-shrink-0">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setShowApiKey(!showApiKey)}
+                      className="flex-shrink-0"
+                    >
+                      {showApiKey ? "Hide" : "Show"}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleCopyApiKey}
+                      className="flex-shrink-0"
+                    >
+                      {copied ? (
+                        <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
                 </div>
               </div>
               <div>

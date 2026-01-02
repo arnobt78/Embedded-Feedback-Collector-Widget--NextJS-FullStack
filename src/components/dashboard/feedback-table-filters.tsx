@@ -74,21 +74,21 @@ export function FeedbackTableFilters({
   const selectedProject = projects.find((p) => p.id === selectedProjectId);
 
   return (
-    <div className="flex items-center gap-2 flex-wrap">
+    <div className="flex flex-col sm:flex-row sm:items-center gap-2">
       {/* Search Input and Filter Button */}
-      <div className="flex items-center gap-2 flex-1 sm:flex-initial">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 flex-1 sm:flex-initial">
         <Input
           placeholder="Search by message..."
           value={searchQuery}
           onChange={(e) => onSearchChange?.(e.target.value)}
-          className="flex-1 sm:max-w-sm bg-white/5 backdrop-blur-sm border-white/20 text-white placeholder:text-white/40 focus-visible:border-sky-400 focus-visible:ring-sky-500/50 shadow-[0_10px_30px_rgba(2,132,199,0.15)]"
+          className="w-full sm:flex-1 sm:max-w-sm bg-white/5 backdrop-blur-sm border-white/20 text-white placeholder:text-white/40 focus-visible:border-sky-400 focus-visible:ring-sky-500/50 shadow-[0_10px_30px_rgba(2,132,199,0.15)]"
         />
         {/* Filter Dropdown */}
         <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
-              className="border-white/20 bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm shadow-[0_10px_30px_rgba(139,92,246,0.15)]"
+              className="w-full sm:w-auto border-white/20 bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm shadow-[0_10px_30px_rgba(139,92,246,0.15)]"
             >
               <Filter className="mr-2 h-4 w-4" />
               Filters
