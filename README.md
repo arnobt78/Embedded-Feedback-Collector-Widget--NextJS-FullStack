@@ -72,6 +72,7 @@ The widget is built as a **Web Component** using Shadow DOM for style isolation,
 - 📈 **Business Insights**: Visual analytics with charts and graphs
 - 🔑 **API Key Management**: Generate, copy, and regenerate API keys
 - 📤 **CSV Export**: Export feedback data for external analysis
+- 📧 **Email Notifications**: Automatic email notifications when new feedback is submitted
 - 🎨 **Dark Mode**: Beautiful dark theme support
 - 📱 **Fully Responsive**: Mobile-first design that works on all screen sizes
 
@@ -103,6 +104,8 @@ The widget is built as a **Web Component** using Shadow DOM for style isolation,
 - **MongoDB** - NoSQL document database
 - **NextAuth.js v5** - Authentication library with JWT sessions
 - **bcryptjs** - Password hashing for secure authentication
+- **Brevo (Sendinblue)** - Email service provider for notifications (primary)
+- **Resend** - Fallback email service provider
 
 ### Build Tools
 
@@ -202,6 +205,15 @@ NEXTAUTH_URL="http://localhost:3000"  # For local development
 # Google OAuth (Optional - for Google sign-in)
 GOOGLE_CLIENT_ID="your-google-client-id"
 GOOGLE_CLIENT_SECRET="your-google-client-secret"
+
+# Email Service Configuration (Brevo + Resend)
+BREVO_API_KEY="your-brevo-api-key"
+BREVO_SENDER_EMAIL="your-email@gmail.com"
+BREVO_SENDER_NAME="Feedback Widget"
+BREVO_ADMIN_EMAIL="your-email@gmail.com"
+
+# Resend API (Fallback - Optional)
+RESEND_TOKEN="your-resend-api-key"
 ```
 
 ### Getting Your MongoDB Connection String
@@ -271,6 +283,32 @@ If you want to enable Google sign-in:
 8. Add authorized redirect URI: `https://your-domain.com/api/auth/callback/google` (production)
 9. Copy the Client ID and Client Secret
 
+#### Email Service Configuration (Brevo + Resend)
+
+**Brevo (Primary Provider):**
+
+1. Go to [Brevo (formerly Sendinblue)](https://www.brevo.com/)
+2. Sign up for a free account (300 emails/day free)
+3. Go to **Settings** → **API Keys**
+4. Generate a new API key and copy it
+5. Go to **Settings** → **Senders & IP**
+6. Add and verify your sender email address
+7. Add the following to your `.env`:
+   - `BREVO_API_KEY` - Your Brevo API key
+   - `BREVO_SENDER_EMAIL` - Verified sender email
+   - `BREVO_SENDER_NAME` - Display name for emails (optional)
+   - `BREVO_ADMIN_EMAIL` - Email address to receive notifications
+
+**Resend (Fallback Provider - Optional):**
+
+1. Go to [Resend](https://resend.com/)
+2. Sign up for a free account (100 emails/day free)
+3. Go to **API Keys** and create a new API key
+4. Verify your sender domain (optional, can use Gmail with limits)
+5. Add `RESEND_TOKEN` to your `.env`
+
+**Note:** Emails are sent automatically when feedback is submitted. You'll receive notifications at `BREVO_ADMIN_EMAIL`. Brevo is used as the primary provider, with Resend as automatic fallback if Brevo fails.
+
 ### Example `.env` File
 
 See `.env.example` in the repository for a template:
@@ -288,6 +326,15 @@ NEXTAUTH_URL="http://localhost:3000"
 # Google OAuth (Optional)
 GOOGLE_CLIENT_ID="your-google-client-id"
 GOOGLE_CLIENT_SECRET="your-google-client-secret"
+
+# Email Service Configuration (Brevo + Resend)
+BREVO_API_KEY="your-brevo-api-key"
+BREVO_SENDER_EMAIL="your-email@gmail.com"
+BREVO_SENDER_NAME="Feedback Widget"
+BREVO_ADMIN_EMAIL="your-email@gmail.com"
+
+# Resend API (Fallback - Optional)
+RESEND_TOKEN="your-resend-api-key"
 ```
 
 ---
@@ -366,6 +413,7 @@ feedback-widget/
 │   ├── lib/                   # Utility functions
 │   │   ├── prisma.ts          # Prisma client singleton
 │   │   ├── auth.ts            # NextAuth configuration and exports
+│   │   ├── email.ts           # Email service with Brevo and Resend fallback
 │   │   ├── api-utils.ts       # API helper functions
 │   │   ├── export-utils.ts    # CSV export utilities
 │   │   ├── query-client.ts    # React Query client
@@ -392,7 +440,7 @@ feedback-widget/
 
 #### `POST /api/feedback`
 
-Create a new feedback entry.
+Create a new feedback entry. Automatically sends an email notification to the admin email when feedback is submitted.
 
 **Headers:**
 
@@ -423,6 +471,14 @@ Create a new feedback entry.
   "createdAt": "2024-01-01T00:00:00.000Z"
 }
 ```
+
+**Email Notification:**
+
+- Automatically sends a professional HTML email to `BREVO_ADMIN_EMAIL` when feedback is submitted
+- Email includes: project name, domain, rating, submitter info, feedback message, and dashboard link
+- Subject line includes timestamp and random number to avoid spam filters
+- Uses Brevo as primary provider, falls back to Resend if Brevo fails
+- Email sending is asynchronous and does not block the API response
 
 #### `GET /api/feedback`
 
@@ -1030,8 +1086,20 @@ npx prisma studio
 
 3. **Configure environment variables**
 
-   - Add `DATABASE_URL` in Vercel project settings
-   - Environment → Add New → `DATABASE_URL`
+   Add all required environment variables in Vercel project settings:
+
+   - `DATABASE_URL` - MongoDB connection string
+   - `AUTH_SECRET` - NextAuth secret key
+   - `NEXTAUTH_URL` - Your production URL
+   - `BREVO_API_KEY` - Brevo API key (for email notifications)
+   - `BREVO_SENDER_EMAIL` - Verified sender email
+   - `BREVO_SENDER_NAME` - Email sender display name (optional)
+   - `BREVO_ADMIN_EMAIL` - Email to receive notifications
+   - `RESEND_TOKEN` - Resend API key (optional, fallback)
+   - `GOOGLE_CLIENT_ID` - Google OAuth client ID (optional)
+   - `GOOGLE_CLIENT_SECRET` - Google OAuth client secret (optional)
+
+   Go to **Settings** → **Environment Variables** → **Add New** and add each variable.
 
 4. **Deploy**
 
