@@ -102,9 +102,17 @@ export async function POST(request: Request) {
       },
     });
 
-    // Send email notification asynchronously (don't block response)
-    // Email sending happens in background - failures are logged but don't affect API response
-    sendFeedbackNotificationEmail({
+    // Send email notification (fire and forget, but wait briefly to capture errors)
+    // Start email sending but don't block the response
+    // Log email attempt immediately for debugging
+    console.log("📧 Attempting to send feedback notification email...", {
+      feedbackId: feedback.id,
+      projectName: feedback.project?.name || "Default Project",
+      submitterEmail: feedback.email || "no email",
+      adminEmail: process.env.BREVO_ADMIN_EMAIL || "not set",
+    });
+
+    const emailPromise = sendFeedbackNotificationEmail({
       projectName: feedback.project?.name || "Default Project",
       projectDomain: feedback.project?.domain || "https://localhost:3000",
       feedbackId: feedback.id,
@@ -137,6 +145,19 @@ export async function POST(request: Request) {
           },
         });
       });
+
+    // Wait up to 3 seconds for email to complete (to capture errors in logs)
+    // This ensures errors are logged before function completes
+    // After 3 seconds, function returns even if email is still sending
+    Promise.race([
+      emailPromise,
+      new Promise((resolve) => setTimeout(() => {
+        console.log("⏱️ Email sending in progress (function returning, email will complete in background)");
+        resolve(null);
+      }, 3000)),
+    ]).catch(() => {
+      // Ignore race timeout - email will continue in background
+    });
 
     return withCORS(NextResponse.json(feedback, { status: 201 })); // 201 = Created
   } catch (error) {
