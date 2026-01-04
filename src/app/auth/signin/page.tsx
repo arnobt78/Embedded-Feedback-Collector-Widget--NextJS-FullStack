@@ -40,7 +40,8 @@ export default function SignInPage() {
       } else {
         // Extract username from email for welcome message
         const emailUsername = data.email.split("@")[0];
-        const capitalizedUsername = emailUsername.charAt(0).toUpperCase() + emailUsername.slice(1);
+        const capitalizedUsername =
+          emailUsername.charAt(0).toUpperCase() + emailUsername.slice(1);
         toast.success(`Welcome back, ${capitalizedUsername}! 👋`, {
           description: "You've been signed in successfully",
         });
@@ -95,7 +96,7 @@ export default function SignInPage() {
 
           {/* Sign Up Link */}
           <div className="mt-6 text-center text-sm text-white/70">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link
               href="/auth/signup"
               className="font-medium text-sky-400 hover:text-sky-300 transition-colors"
@@ -111,4 +112,3 @@ export default function SignInPage() {
     </div>
   );
 }
-
